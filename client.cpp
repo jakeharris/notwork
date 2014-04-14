@@ -18,12 +18,13 @@ using namespace std;
 
 bool gremlin(Packet * pack, int corruptProb, int lossProb);
 bool init(int argc, char** argv);
-bool loadFile(string filename);
+bool loadFile();
 bool sendFile();
-bool sendPkt(char * data);
+bool sendPkt();
 char * recvPkt();
-bool isValidPkt(char * data);
-
+bool isValidPkt();
+Packet createPacket(int index);
+bool sendPacket();
 
 bool seqNum;
 int s;
@@ -37,7 +38,9 @@ struct sockaddr_in a;
 struct sockaddr_in sa;
 socklen_t salen;
 string fstr;
-bool dropPckt;
+bool dropPck;
+Packet p;
+unsigned char b[BUFSIZE];
 
 int main(int argc, char** argv) {
   
@@ -97,7 +100,7 @@ bool init(int argc, char** argv) {
 
   cout << endl << endl;
 
-  string fstr = string(file);
+  fstr = string(file);
 
   cout << "File: " << endl << fstr << endl << endl;
 
@@ -110,8 +113,6 @@ bool loadFile() {
 
   ifstream is (FILENAME, ifstream::binary);
 
-  unsigned char b[BUFSIZE]; 
-  
   if(is) {
     is.seekg(0, is.end);
     length = is.tellg();
@@ -131,9 +132,8 @@ bool loadFile() {
 bool sendFile() {
 
   for(int x = 0; x <= length / BUFSIZE; x++) {
-    Packet p = createPacket();
+    p = createPacket(x);
     if(!sendPacket()) continue;
-
     recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
     char * ack = new char[3];
 
@@ -176,18 +176,19 @@ bool sendFile() {
   return true;
 }
 
-Packet createPacket(){
+Packet createPacket(int index){
     cout << endl;
     cout << "=== TRANSMISSION START" << endl;
-    string mstr = fstr.substr(x * BUFSIZE, BUFSIZE);
-    if(x * BUFSIZE + BUFSIZE > length) {
-      mstr[length - (x * BUFSIZE)] = '\0';
+    string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
+    if(index * BUFSIZE + BUFSIZE > length) {
+      mstr[length - (index * BUFSIZE)] = '\0';
     }
-    return Packet p(seqNum, mstr.c_str());
+    return Packet (seqNum, mstr.c_str());
 }
 
 bool sendPacket(){
-    if((dropPck = gremlin(&p, probCorrupt, probLoss)) == false){
+    int pc = probCorrupt; int pl = probLoss;
+    if((dropPck = gremlin(&p, pc, pl)) == false){
       if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
         cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
         return false;
@@ -199,6 +200,9 @@ bool sendPacket(){
 bool gremlin(Packet * pack, int corruptProb, int lossProb){
   bool dropPacket = false;
   int r = rand() % 100;
+
+  cout << "Corruption probability: " << corruptProb << endl;
+  cout << "Random number: " << r << endl;
 
   if(r <= (lossProb)){
     dropPacket = true;
