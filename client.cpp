@@ -15,11 +15,98 @@
 #define TEST_FILENAME "Testfile2"
 
 using namespace std;
+
 bool gremlin(Packet * pack, int corruptProb, int lossProb);
+bool init(int argc, char** argv);
+bool loadFile(string filename);
+bool sendFile(string filename);
+bool sendPkt(char * data);
+char * recvPkt();
+bool isValidPkt(char * data);
 
 bool seqNum;
 
 int main(int argc, char** argv) {
+  
+  if(!init(argc, argv)) return -1;
+ 
+  sa.sin_family = AF_INET;
+  sa.sin_port = htons(port);
+  inet_pton(AF_INET, hs.c_str(), &(sa.sin_addr));
+
+  cout << endl;
+
+  cout << "Server address (inet mode): " << inet_ntoa(sa.sin_addr) << endl;
+  cout << "Port: " << ntohs(sa.sin_port) << endl;
+
+  cout << endl << endl;
+
+  string fstr = string(file);
+
+  cout << "File: " << endl << fstr << endl << endl;
+
+  seqNum = true;
+  bool dropPck = false;
+  for(int x = 0; x <= length / BUFSIZE; x++) {
+    cout << endl;
+    cout << "=== TRANSMISSION START" << endl;
+    string mstr = fstr.substr(x * BUFSIZE, BUFSIZE);
+    if(x * BUFSIZE + BUFSIZE > length) {
+      mstr[length - (x * BUFSIZE)] = '\0';
+    }
+    Packet p(seqNum, mstr.c_str());
+
+    if((dropPck = gremlin(&p, probCorrupt, probLoss)) == false){
+      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+        cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+        return 0;
+      }
+    } else continue;
+
+    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
+    char * ack = new char[3];
+
+    cout << endl << "=== SERVER RESPONSE TEST" << endl;
+    cout << "Data: " << b << endl;
+    if(b[6] == '0') ack = (char *)"ACK";
+    else ack = (char *)"NAK";
+    cout << "Response: " << ack << endl;
+
+    if(ack == "NAK") { //if NAK
+      /* should say: if chksm(). chksm should be a function both client and server 
+       * can see and use that returns a boolean: true if the checksum "checks out" 
+       * (no bytes have been tampered with). 
+      */
+
+      char * sns = new char[2];
+      memcpy(sns, &b[0], 1);
+      sns[1] = '\0';
+
+      char * css = new char[5];
+      memcpy(css, &b[1], 5);
+      
+      char * db = new char[BUFSIZE + 1];
+      memcpy(db, &b[2], BUFSIZE);
+      db[BUFSIZE] = '\0';
+
+      cout << "Sequence number: " << sns << endl;
+      cout << "Checksum: " << css << endl;
+
+      Packet pk (0, db);
+      pk.setSequenceNum(boost::lexical_cast<int>(sns));
+      pk.setCheckSum(boost::lexical_cast<int>(css));
+
+      if(!pk.chksm()) x--; 
+      else x = (x - 2 > 0) ? x - 2 : 0;
+    }
+
+    memset(b, 0, BUFSIZE);
+  }
+
+  return 0;
+}
+
+bool init(int argc, char** argv) {
   
   int s = 0;
 
@@ -98,64 +185,9 @@ int main(int argc, char** argv) {
 
   seqNum = true;
   bool dropPck = false;
-  for(int x = 0; x <= length / BUFSIZE; x++) {
-    cout << endl;
-    cout << "=== TRANSMISSION START" << endl;
-    string mstr = fstr.substr(x * BUFSIZE, BUFSIZE);
-    if(x * BUFSIZE + BUFSIZE > length) {
-      mstr[length - (x * BUFSIZE)] = '\0';
-    }
-    Packet p(seqNum, mstr.c_str());
-
-    if((dropPck = gremlin(&p, probCorrupt, probLoss)) == false){
-      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-        cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
-        return 0;
-      }
-    } else continue;
-
-    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
-    char * ack = new char[3];
-
-    cout << endl << "=== SERVER RESPONSE TEST" << endl;
-    cout << "Data: " << b << endl;
-    if(b[6] == '0') ack = (char *)"ACK";
-    else ack = (char *)"NAK";
-    cout << "Response: " << ack << endl;
-
-    if(ack == "NAK") { //if NAK
-      /* should say: if chksm(). chksm should be a function both client and server 
-       * can see and use that returns a boolean: true if the checksum "checks out" 
-       * (no bytes have been tampered with). 
-      */
-
-      char * sns = new char[2];
-      memcpy(sns, &b[0], 1);
-      sns[1] = '\0';
-
-      char * css = new char[5];
-      memcpy(css, &b[1], 5);
-      
-      char * db = new char[BUFSIZE + 1];
-      memcpy(db, &b[2], BUFSIZE);
-      db[BUFSIZE] = '\0';
-
-      cout << "Sequence number: " << sns << endl;
-      cout << "Checksum: " << css << endl;
-
-      Packet pk (0, db);
-      pk.setSequenceNum(boost::lexical_cast<int>(sns));
-      pk.setCheckSum(boost::lexical_cast<int>(css));
-
-      if(!pk.chksm()) x--; 
-      else x = (x - 2 > 0) ? x - 2 : 0;
-    }
-
-    memset(b, 0, BUFSIZE);
-  }
-
-  return 0;
+  return true;
 }
+
 bool gremlin(Packet * pack, int corruptProb, int lossProb){
   bool dropPacket = false;
   int r = rand() % 100;
