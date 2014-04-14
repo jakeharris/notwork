@@ -54,7 +54,7 @@ bool init(int argc, char** argv) {
 
   if(argc != 4) { 
     cout << USAGE << endl;
-    return 1;
+    return false;
   }
 
   char * probCorruptStr = argv[2];
@@ -122,28 +122,17 @@ bool loadFile() {
     cout << "Reading " << length << " characters..." << endl;
     is.read(file, length);
 
-    if(!is) cout << "File reading failed. (filename " << FILENAME << "). Only " << is.gcount() << " could be read.";
+    if(!is) { cout << "File reading failed. (filename " << FILENAME << "). Only " << is.gcount() << " could be read."; return false; }
     is.close();
   }
+  return true;
 }
 
 bool sendFile() {
 
   for(int x = 0; x <= length / BUFSIZE; x++) {
-    cout << endl;
-    cout << "=== TRANSMISSION START" << endl;
-    string mstr = fstr.substr(x * BUFSIZE, BUFSIZE);
-    if(x * BUFSIZE + BUFSIZE > length) {
-      mstr[length - (x * BUFSIZE)] = '\0';
-    }
-    Packet p(seqNum, mstr.c_str());
-
-    if((dropPck = gremlin(&p, probCorrupt, probLoss)) == false){
-      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-        cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
-        return 0;
-      }
-    } else continue;
+    Packet p = createPacket();
+    if(!sendPacket()) continue;
 
     recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
     char * ack = new char[3];
@@ -185,6 +174,26 @@ bool sendFile() {
     memset(b, 0, BUFSIZE);
   }
   return true;
+}
+
+Packet createPacket(){
+    cout << endl;
+    cout << "=== TRANSMISSION START" << endl;
+    string mstr = fstr.substr(x * BUFSIZE, BUFSIZE);
+    if(x * BUFSIZE + BUFSIZE > length) {
+      mstr[length - (x * BUFSIZE)] = '\0';
+    }
+    return Packet p(seqNum, mstr.c_str());
+}
+
+bool sendPacket(){
+    if((dropPck = gremlin(&p, probCorrupt, probLoss)) == false){
+      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+        cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+        return false;
+      }
+      return true;
+    } else return false;
 }
 
 bool gremlin(Packet * pack, int corruptProb, int lossProb){
