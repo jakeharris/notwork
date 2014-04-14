@@ -19,17 +19,73 @@ using namespace std;
 bool gremlin(Packet * pack, int corruptProb, int lossProb);
 bool init(int argc, char** argv);
 bool loadFile(string filename);
-bool sendFile(string filename);
+bool sendFile();
 bool sendPkt(char * data);
 char * recvPkt();
 bool isValidPkt(char * data);
 
+
 bool seqNum;
+int s;
+int probCorrupt;
+int probLoss;
+string hs;
+short int port;
+char * file;
+int length;
+struct sockaddr_in a;
+struct sockaddr_in sa;
+socklen_t salen;
+string fstr;
+bool dropPckt;
 
 int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
  
+  sendFile();
+
+  return 0;
+}
+
+bool init(int argc, char** argv) {
+  
+  s = 0;
+
+  if(argc != 4) { 
+    cout << USAGE << endl;
+    return 1;
+  }
+
+  char * probCorruptStr = argv[2];
+  probCorrupt = boost::lexical_cast<int>(probCorruptStr);
+  char * probLossStr = argv[3];
+  probLoss = boost::lexical_cast<int>(probLossStr);
+
+  hs = string("131.204.14.") + argv[1]; /* Needs to be updated? Might be a string like "tux175.engr.auburn.edu." */
+  port = 10038; /* Can be any port within 10038-10041, inclusive. */
+
+  if(!loadFile()) {
+    cout << "Loading file failed. (filename FILENAME)" << endl;
+    return false;
+  }
+
+  if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+    cout << "Socket creation failed. (socket s)" << endl;
+    return false;
+  }
+
+  memset((char *)&a, 0, sizeof(a));
+  a.sin_family = AF_INET;
+  a.sin_addr.s_addr = htonl(INADDR_ANY); //why does this always give us 0? 
+  a.sin_port = htons(0);
+
+  if (bind(s, (struct sockaddr *)&a, sizeof(a)) < 0){
+    cout << "Socket binding failed. (socket s, address a)" << endl;
+    return false;
+  }
+
+  memset((char *)&sa, 0, sizeof(sa));
   sa.sin_family = AF_INET;
   sa.sin_port = htons(port);
   inet_pton(AF_INET, hs.c_str(), &(sa.sin_addr));
@@ -46,7 +102,33 @@ int main(int argc, char** argv) {
   cout << "File: " << endl << fstr << endl << endl;
 
   seqNum = true;
-  bool dropPck = false;
+  dropPck = false;
+  return true;
+}
+
+bool loadFile() {
+
+  ifstream is (FILENAME, ifstream::binary);
+
+  unsigned char b[BUFSIZE]; 
+  
+  if(is) {
+    is.seekg(0, is.end);
+    length = is.tellg();
+    is.seekg(0, is.beg);
+
+    file = new char[length];
+
+    cout << "Reading " << length << " characters..." << endl;
+    is.read(file, length);
+
+    if(!is) cout << "File reading failed. (filename " << FILENAME << "). Only " << is.gcount() << " could be read.";
+    is.close();
+  }
+}
+
+bool sendFile() {
+
   for(int x = 0; x <= length / BUFSIZE; x++) {
     cout << endl;
     cout << "=== TRANSMISSION START" << endl;
@@ -102,89 +184,6 @@ int main(int argc, char** argv) {
 
     memset(b, 0, BUFSIZE);
   }
-
-  return 0;
-}
-
-bool init(int argc, char** argv) {
-  
-  int s = 0;
-
-  if(argc != 4) { 
-    cout << USAGE << endl;
-    return 1;
-  }
-
-  char * probCorruptStr = argv[2];
-  int probCorrupt = boost::lexical_cast<int>(probCorruptStr);
-  char * probLossStr = argv[3];
-  int probLoss = boost::lexical_cast<int>(probLossStr);
-
-  string hs = string("131.204.14.") + argv[1]; /* Needs to be updated? Might be a string like "tux175.engr.auburn.edu." */
-  short int port = 10038; /* Can be any port within 10038-10041, inclusive. */
-  
-  ifstream is (FILENAME, ifstream::binary);
-
-  unsigned char b[BUFSIZE]; 
-  char * file;
-  int length;
-
-  if(is) {
-    is.seekg(0, is.end);
-    length = is.tellg();
-    is.seekg(0, is.beg);
-
-    file = new char[length];
-
-    cout << "Reading " << length << " characters..." << endl;
-    is.read(file, length);
-
-    if(!is) cout << "File reading failed. (filename " << FILENAME << "). Only " << is.gcount() << " could be read.";
-    is.close();
-  }
-
-  struct sockaddr_in a;
-  struct sockaddr_in sa;
-  socklen_t salen = sizeof(sa);
-  struct hostent *h;
-
-  string m = string("Hello, server world! I'm gonna talk for a long long time and see if this works. Maybe \r\n")
-      + "it'll properly tell me there are more bytes; maybe it won't. Either way I'll be proud of the work I've done. \r\n"
-      + "Also, Patrick is gay.";
-
-  if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-    cout << "Socket creation failed. (socket s)" << endl;
-    return 0;
-  }
-
-  memset((char *)&a, 0, sizeof(a));
-  a.sin_family = AF_INET;
-  a.sin_addr.s_addr = htonl(INADDR_ANY); //why does this always give us 0? 
-  a.sin_port = htons(0);
-
-  if (bind(s, (struct sockaddr *)&a, sizeof(a)) < 0){
-    cout << "Socket binding failed. (socket s, address a)" << endl;
-    return 0;
-  }
-
-  memset((char *)&sa, 0, sizeof(sa));
-  sa.sin_family = AF_INET;
-  sa.sin_port = htons(port);
-  inet_pton(AF_INET, hs.c_str(), &(sa.sin_addr));
-
-  cout << endl;
-
-  cout << "Server address (inet mode): " << inet_ntoa(sa.sin_addr) << endl;
-  cout << "Port: " << ntohs(sa.sin_port) << endl;
-
-  cout << endl << endl;
-
-  string fstr = string(file);
-
-  cout << "File: " << endl << fstr << endl << endl;
-
-  seqNum = true;
-  bool dropPck = false;
   return true;
 }
 
