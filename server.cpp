@@ -14,7 +14,14 @@
 
 using namespace std;
 
-bool seqNum;
+bool seqNum = true;
+struct sockaddr_in a;
+struct sockaddr_in ca;
+socklen_t calen;
+int rlen;
+int s;
+bool ack;
+
 
 bool isvpack(unsigned char * p) {
 
@@ -50,14 +57,15 @@ bool isvpack(unsigned char * p) {
 }
 
 int main() {
-  struct sockaddr_in a;
-  struct sockaddr_in ca;
-  socklen_t calen = sizeof(ca);
-  int rlen;
-  int s;
-  bool ack;
-  seqNum = true;
+  
+  if(!initServer()) return -1;
 
+  getFile();
+  
+  return 0;
+}
+
+bool initServer(){
   /* Create our socket. */
   if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     cout << "Socket creation failed. (socket s)" << endl;
@@ -80,8 +88,13 @@ int main() {
     return 0;
   }
 
-  /* Loop forever, waiting for messages from a client. */
+	return true;
+}
 
+bool getFile(){
+  socklen_t calen sizeof(ca);
+
+  /* Loop forever, waiting for messages from a client. */
   cout << "Waiting on port " << PORT << "..." << endl;
 
   ofstream file("Dumpfile");
@@ -131,4 +144,5 @@ int main() {
     }
   }
   file.close();
+  return true;
 }
