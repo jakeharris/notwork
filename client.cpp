@@ -20,11 +20,13 @@ bool gremlin(Packet * pack, int corruptProb, int lossProb);
 bool init(int argc, char** argv);
 bool loadFile();
 bool sendFile();
-bool sendPkt();
 char * recvPkt();
 bool isValidPkt();
 Packet createPacket(int index);
 bool sendPacket();
+bool isAck();
+void handleAck();
+void handleNak(int& x);
 
 bool seqNum;
 int s;
@@ -134,41 +136,11 @@ bool sendFile() {
   for(int x = 0; x <= length / BUFSIZE; x++) {
     p = createPacket(x);
     if(!sendPacket()) continue;
-    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
-    char * ack = new char[3];
 
-    cout << endl << "=== SERVER RESPONSE TEST" << endl;
-    cout << "Data: " << b << endl;
-    if(b[6] == '0') ack = (char *)"ACK";
-    else ack = (char *)"NAK";
-    cout << "Response: " << ack << endl;
-
-    if(ack == "NAK") { //if NAK
-      /* should say: if chksm(). chksm should be a function both client and server 
-       * can see and use that returns a boolean: true if the checksum "checks out" 
-       * (no bytes have been tampered with). 
-      */
-
-      char * sns = new char[2];
-      memcpy(sns, &b[0], 1);
-      sns[1] = '\0';
-
-      char * css = new char[5];
-      memcpy(css, &b[1], 5);
-      
-      char * db = new char[BUFSIZE + 1];
-      memcpy(db, &b[2], BUFSIZE);
-      db[BUFSIZE] = '\0';
-
-      cout << "Sequence number: " << sns << endl;
-      cout << "Checksum: " << css << endl;
-
-      Packet pk (0, db);
-      pk.setSequenceNum(boost::lexical_cast<int>(sns));
-      pk.setCheckSum(boost::lexical_cast<int>(css));
-
-      if(!pk.chksm()) x--; 
-      else x = (x - 2 > 0) ? x - 2 : 0;
+    if(isAck()) { 
+      handleAck();
+    } else { 
+      handleNak(x);
     }
 
     memset(b, 0, BUFSIZE);
@@ -195,6 +167,40 @@ bool sendPacket(){
       }
       return true;
     } else return false;
+}
+bool isAck() {
+    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
+
+    cout << endl << "=== SERVER RESPONSE TEST" << endl;
+    cout << "Data: " << b << endl;
+    if(b[6] == '0') return true;
+    else return false;
+}
+void handleAck() {
+
+}
+void handleNak(int& x) {
+
+      char * sns = new char[2];
+      memcpy(sns, &b[0], 1);
+      sns[1] = '\0';
+
+      char * css = new char[5];
+      memcpy(css, &b[1], 5);
+      
+      char * db = new char[BUFSIZE + 1];
+      memcpy(db, &b[2], BUFSIZE);
+      db[BUFSIZE] = '\0';
+
+      cout << "Sequence number: " << sns << endl;
+      cout << "Checksum: " << css << endl;
+
+      Packet pk (0, db);
+      pk.setSequenceNum(boost::lexical_cast<int>(sns));
+      pk.setCheckSum(boost::lexical_cast<int>(css));
+
+      if(!pk.chksm()) x--; 
+      else x = (x - 2 > 0) ? x - 2 : 0;
 }
 
 bool gremlin(Packet * pack, int corruptProb, int lossProb){
