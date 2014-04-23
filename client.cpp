@@ -265,7 +265,7 @@ bool getFile(){
   int rlen;
   int ack;
   
-  bool isSeqNumSet = false;
+  bool isSeqNumSet = true;
   for (;;) {
     unsigned char packet[PAKSIZE + 1];
     unsigned char dataPull[PAKSIZE - 7 + 1];
