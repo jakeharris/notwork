@@ -13,6 +13,10 @@
 #define BUFSIZE 121
 #define FILENAME "Testfile"
 #define TEST_FILENAME "Testfile2"
+#define PORT 10038
+#define PAKSIZE 128
+#define ACK 0
+#define NAK 1
 
 using namespace std;
 
@@ -260,8 +264,6 @@ bool isvpack(unsigned char * p) {
 
 
 bool getFile(){
-  socklen_t calen sizeof(ca);
-
   /* Loop forever, waiting for messages from a client. */
   cout << "Waiting on port " << PORT << "..." << endl;
 
@@ -271,7 +273,7 @@ bool getFile(){
   for (;;) {
     unsigned char packet[PAKSIZE + 1];
     unsigned char dataPull[PAKSIZE - 7 + 1];
-    rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
+    rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&sa, &salen);
     if(!isSeqNumSet) {
       isSeqNumSet = true;
       char * str = new char[1];
@@ -304,7 +306,7 @@ bool getFile(){
       p.setCheckSum(boost::lexical_cast<int>(css));
       p.setAckNack(ack);
 
-      if(sendto(s, p.str(), PAKSIZE, 0, (struct sockaddr *)&ca, calen) < 0) {
+      if(sendto(s, p.str(), PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
         return 0;
       }
