@@ -31,6 +31,7 @@ int probLoss;
 Packet p;
 int length;
 unsigned char b[BUFSIZE];
+bool dropPck;
 
 bool isvpack(unsigned char * p);
 bool init(int argc, char** argv);
@@ -42,12 +43,13 @@ void handleAck();
 void handleNak(int& x);
 bool gremlin(Packet * pack, int corruptProb, int lossProb);
 Packet createPacket(int index);
+bool sendPacket();
 
 int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
 
-  calen sizeof(ca);
+  calen = sizeof(ca);
   
   unsigned char packet[PAKSIZE + 1];
   rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
@@ -101,6 +103,9 @@ bool init(int argc, char** argv){
   fstr = string(file);
   cout << "File: " << endl << fstr << endl;
 
+  seqNum = true;
+  dropPck = false;
+  
   return true;
 }
 
