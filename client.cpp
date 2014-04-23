@@ -269,6 +269,9 @@ bool getFile(){
 
   ofstream file("Dumpfile");
 
+  int rlen;
+  int ack;
+  
   bool isSeqNumSet = false;
   for (;;) {
     unsigned char packet[PAKSIZE + 1];
