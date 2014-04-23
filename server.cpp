@@ -20,7 +20,7 @@ using namespace std;
 bool seqNum = true;
 struct sockaddr_in a;
 struct sockaddr_in ca;
-socklen_t calen;
+socklen_t calen sizeof(ca);
 int rlen;
 int s;
 bool ack;
@@ -44,7 +44,7 @@ Packet createPacket(int index);
 
 int main(int argc, char** argv) {
   
-  if(!init(int argc, char** argv)) return -1;
+  if(!init(argc, argv)) return -1;
 
   unsigned char packet[PAKSIZE + 1];
   rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
@@ -134,7 +134,6 @@ bool isvpack(unsigned char * p) {
 
 
 bool getFile(){
-  socklen_t calen sizeof(ca);
 
   /* Loop forever, waiting for messages from a client. */
   cout << "Waiting on port " << PORT << "..." << endl;
