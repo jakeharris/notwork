@@ -274,6 +274,9 @@ bool getFile(){
       isSeqNumSet = true;
       char * str = new char[1];
       memcpy(str, &packet[0], 1);
+      
+      cout << "str: " << str << endl;
+      
       seqNum = boost::lexical_cast<int>(str);
     }
     for(int x = 0; x < PAKSIZE - 7; x++) {
