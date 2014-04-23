@@ -51,6 +51,11 @@ int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
  
+  if(sendto(s, "GET Testfile", BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
+    cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+    return false;
+  }
+  
   getFile();
 
   return 0;
