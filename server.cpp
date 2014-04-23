@@ -20,7 +20,7 @@ using namespace std;
 bool seqNum = true;
 struct sockaddr_in a;
 struct sockaddr_in ca;
-socklen_t calen sizeof(ca);
+socklen_t calen;
 int rlen;
 int s;
 bool ack;
@@ -29,6 +29,7 @@ char * file;
 int probCorrupt;
 int probLoss;
 Packet p;
+int length;
 unsigned char b[BUFSIZE];
 
 bool isvpack(unsigned char * p);
@@ -46,6 +47,8 @@ int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
 
+  calen sizeof(ca);
+  
   unsigned char packet[PAKSIZE + 1];
   rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
   isvpack(packet);
