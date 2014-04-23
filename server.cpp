@@ -53,7 +53,6 @@ int main(int argc, char** argv) {
   
   unsigned char packet[PAKSIZE + 1];
   rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
-  isvpack(packet);
   
   sendFile();
   
