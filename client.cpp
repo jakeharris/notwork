@@ -8,8 +8,6 @@
 #include <boost/lexical_cast.hpp>
 #include "packet.h"
 
-
-#define USAGE "Usage:\r\nc [tux machine number] [probability of packet corruption in int form] [probability of packet loss in int form]\r\n"
 #define BUFSIZE 121
 #define FILENAME "Testfile"
 #define TEST_FILENAME "Testfile2"
@@ -61,16 +59,6 @@ int main(int argc, char** argv) {
 bool init(int argc, char** argv) {
   
   s = 0;
-
-  if(argc != 4) { 
-    cout << USAGE << endl;
-    return false;
-  }
-
-  char * probCorruptStr = argv[2];
-  probCorrupt = boost::lexical_cast<int>(probCorruptStr);
-  char * probLossStr = argv[3];
-  probLoss = boost::lexical_cast<int>(probLossStr);
 
   hs = string("131.204.14.") + argv[1]; /* Needs to be updated? Might be a string like "tux175.engr.auburn.edu." */
   port = 10038; /* Can be any port within 10038-10041, inclusive. */

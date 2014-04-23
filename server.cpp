@@ -7,10 +7,13 @@
 #include <boost/lexical_cast.hpp>
 #include "packet.h"
 
+#define USAGE "Usage:\r\nc [tux machine number] [probability of packet corruption in int form] [probability of packet loss in int form]\r\n"
 #define PORT 10038
 #define PAKSIZE 128
 #define ACK 0
 #define NAK 1
+#define BUFSIZE 121
+#define FILENAME "Testfile"
 
 using namespace std;
 
@@ -22,6 +25,7 @@ int rlen;
 int s;
 bool ack;
 string fstr;
+char * file;
 
 bool isvpack(unsigned char * p);
 bool init();
@@ -48,6 +52,18 @@ int main() {
 }
 
 bool init(){
+  
+  if(argc != 4) { 
+    cout << USAGE << endl;
+    return false;
+  }
+
+  char * probCorruptStr = argv[2];
+  probCorrupt = boost::lexical_cast<int>(probCorruptStr);
+  char * probLossStr = argv[3];
+  probLoss = boost::lexical_cast<int>(probLossStr);
+  
+  
   /* Create our socket. */
   if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     cout << "Socket creation failed. (socket s)" << endl;
