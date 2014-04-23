@@ -21,11 +21,67 @@ socklen_t calen;
 int rlen;
 int s;
 bool ack;
+string fstr;
 
+bool isvpack(unsigned char * p);
+bool init();
+bool loadFile();
+bool getFile();
+bool sendFile();
+bool isAck();
+void handleAck();
+void handleNak(int& x);
+bool gremlin(Packet * pack, int corruptProb, int lossProb);
+Packet createPacket(int index);
+
+int main() {
+  
+  if(!init()) return -1;
+
+  unsigned char packet[PAKSIZE + 1];
+  rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
+  isvpack(packet);
+  
+  sendFile();
+  
+  return 0;
+}
+
+bool init(){
+  /* Create our socket. */
+  if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    cout << "Socket creation failed. (socket s)" << endl;
+    return 0;
+  }
+
+  /* 
+   * Bind our socket to an IP (whatever the computer decides) 
+   * and a specified port. 
+   *
+   */
+
+  if (!loadFile()) {
+    cout << "Loading file failed. (filename FILENAME)" << endl;
+    return false; 
+  }
+  
+  memset((char *)&a, 0, sizeof(a));
+  a.sin_family = AF_INET;
+  a.sin_addr.s_addr = htonl(INADDR_ANY);
+  a.sin_port = htons(PORT);
+
+  if (bind(s, (struct sockaddr *)&a, sizeof(a)) < 0) {
+    cout << "Socket binding failed. (socket s, address a)" << endl;
+    return 0;
+  }
+  
+  fstr = string(file);
+  cout << "File: " << endl << fstr << endl;
+
+  return true;
+}
 
 bool isvpack(unsigned char * p) {
-
-
   cout << endl << "=== IS VALID PACKET TESTING" << endl;
 
   char * sns = new char[2];
@@ -56,40 +112,6 @@ bool isvpack(unsigned char * p) {
   return true;
 }
 
-int main() {
-  
-  if(!initServer()) return -1;
-
-  getFile();
-  
-  return 0;
-}
-
-bool initServer(){
-  /* Create our socket. */
-  if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-    cout << "Socket creation failed. (socket s)" << endl;
-    return 0;
-  }
-
-  /* 
-   * Bind our socket to an IP (whatever the computer decides) 
-   * and a specified port. 
-   *
-   */
-
-  memset((char *)&a, 0, sizeof(a));
-  a.sin_family = AF_INET;
-  a.sin_addr.s_addr = htonl(INADDR_ANY);
-  a.sin_port = htons(PORT);
-
-  if (bind(s, (struct sockaddr *)&a, sizeof(a)) < 0) {
-    cout << "Socket binding failed. (socket s, address a)" << endl;
-    return 0;
-  }
-
-	return true;
-}
 
 bool getFile(){
   socklen_t calen sizeof(ca);
@@ -145,4 +167,120 @@ bool getFile(){
   }
   file.close();
   return true;
+}
+
+bool loadFile() {
+
+  ifstream is (FILENAME, ifstream::binary);
+
+  if(is) {
+    is.seekg(0, is.end);
+    length = is.tellg();
+    is.seekg(0, is.beg);
+
+    file = new char[length];
+
+    cout << "Reading " << length << " characters..." << endl;
+    is.read(file, length);
+
+    if(!is) { cout << "File reading failed. (filename " << FILENAME << "). Only " << is.gcount() << " could be read."; return false; }
+    is.close();
+  }
+  return true;
+}
+
+bool sendFile() {
+
+  for(int x = 0; x <= length / BUFSIZE; x++) {
+    p = createPacket(x);
+    if(!sendPacket()) continue;
+
+    if(isAck()) { 
+      handleAck();
+    } else { 
+      handleNak(x);
+    }
+
+    memset(b, 0, BUFSIZE);
+  }
+  return true;
+}
+
+Packet createPacket(int index){
+    cout << endl;
+    cout << "=== TRANSMISSION START" << endl;
+    string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
+    if(index * BUFSIZE + BUFSIZE > length) {
+      mstr[length - (index * BUFSIZE)] = '\0';
+    }
+    return Packet (seqNum, mstr.c_str());
+}
+
+bool sendPacket(){
+    int pc = probCorrupt; int pl = probLoss;
+    if((dropPck = gremlin(&p, pc, pl)) == false){
+      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+        cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+        return false;
+      }
+      return true;
+    } else return false;
+}
+
+bool isAck() {
+    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
+
+    cout << endl << "=== SERVER RESPONSE TEST" << endl;
+    cout << "Data: " << b << endl;
+    if(b[6] == '0') return true;
+    else return false;
+}
+void handleAck() {
+
+}
+void handleNak(int& x) {
+
+      char * sns = new char[2];
+      memcpy(sns, &b[0], 1);
+      sns[1] = '\0';
+
+      char * css = new char[5];
+      memcpy(css, &b[1], 5);
+      
+      char * db = new char[BUFSIZE + 1];
+      memcpy(db, &b[2], BUFSIZE);
+      db[BUFSIZE] = '\0';
+
+      cout << "Sequence number: " << sns << endl;
+      cout << "Checksum: " << css << endl;
+
+      Packet pk (0, db);
+      pk.setSequenceNum(boost::lexical_cast<int>(sns));
+      pk.setCheckSum(boost::lexical_cast<int>(css));
+
+      if(!pk.chksm()) x--; 
+      else x = (x - 2 > 0) ? x - 2 : 0;
+}
+
+bool gremlin(Packet * pack, int corruptProb, int lossProb){
+  bool dropPacket = false;
+  int r = rand() % 100;
+
+  cout << "Corruption probability: " << corruptProb << endl;
+  cout << "Random number: " << r << endl;
+
+  if(r <= (lossProb)){
+    dropPacket = true;
+    cout << "Dropped!" << endl;
+  }  
+  else if(r <= (corruptProb)){
+    cout << "Corrupted!" << endl;
+    pack->loadDataBuffer((char*)"GREMLIN LOL");
+  }
+  else seqNum = (seqNum) ? false : true; 
+  cout << "Seq. num: " << pack->getSequenceNum() << endl;
+  cout << "Checksum: " << pack->getCheckSum() << endl;
+  cout << "Message: "  << pack->getDataBuffer() << endl;
+
+  return dropPacket;
 }
