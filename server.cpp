@@ -26,6 +26,9 @@ int s;
 bool ack;
 string fstr;
 char * file;
+int probCorrupt;
+int probLoss;
+Packet p;
 
 bool isvpack(unsigned char * p);
 bool init();
@@ -235,7 +238,7 @@ Packet createPacket(int index){
 bool sendPacket(){
     int pc = probCorrupt; int pl = probLoss;
     if((dropPck = gremlin(&p, pc, pl)) == false){
-      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
         cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
         return false;
       }
@@ -244,7 +247,7 @@ bool sendPacket(){
 }
 
 bool isAck() {
-    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&sa, &salen);
+    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen);
 
     cout << endl << "=== SERVER RESPONSE TEST" << endl;
     cout << "Data: " << b << endl;
