@@ -29,9 +29,10 @@ char * file;
 int probCorrupt;
 int probLoss;
 Packet p;
+unsigned char b[BUFSIZE];
 
 bool isvpack(unsigned char * p);
-bool init();
+bool init(int argc, char** argv);
 bool loadFile();
 bool getFile();
 bool sendFile();
@@ -41,9 +42,9 @@ void handleNak(int& x);
 bool gremlin(Packet * pack, int corruptProb, int lossProb);
 Packet createPacket(int index);
 
-int main() {
+int main(int argc, char** argv) {
   
-  if(!init()) return -1;
+  if(!init(int argc, char** argv)) return -1;
 
   unsigned char packet[PAKSIZE + 1];
   rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
@@ -54,7 +55,7 @@ int main() {
   return 0;
 }
 
-bool init(){
+bool init(int argc, char** argv){
   
   if(argc != 4) { 
     cout << USAGE << endl;
