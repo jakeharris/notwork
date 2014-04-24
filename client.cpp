@@ -282,8 +282,14 @@ bool getFile(){
 	int properIndex = tempSeqNum - windowBase;
 
 	window[properIndex] = packet;
+	cout << "Packet loaded into window" << endl;
+	char* tempTest = new char[6];
+		memcpty(tempTest, &window[1], 0);
+		css[5] = '\0';
+	
+	cout << "The Checksum pulled from client window: " << tempTest[0] << endl; 
 
-    for(int x = 0; x < PAKSIZE - 7; x++) {
+	for(int x = 0; x < PAKSIZE - 7; x++) {
       dataPull[x] = packet[x + 7];
     }
     dataPull[PAKSIZE - 7] = '\0';
