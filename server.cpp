@@ -34,7 +34,7 @@ Packet createPacket(int index);
 void loadWindow();
 bool sendPacket();
 
-bool seqNum = true;
+int seqNum = 0;
 struct sockaddr_in a;
 struct sockaddr_in ca;
 socklen_t calen;
@@ -124,7 +124,7 @@ bool init(int argc, char** argv){
   fstr = string(file);
   cout << "File: " << endl << fstr << endl;
 
-  seqNum = true;
+  seqNum = 0;
   dropPck = false;
   
   return true;
@@ -353,13 +353,13 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   else if(r <= (delayProb)){
 	  packStatus[1] = true;
 	  cout << "Delayed!" << endl;
-	  seqNum = (seqNum) ? false : true;
+	  seqNum++;
   }
   else if(r <= (corruptProb)){
     cout << "Corrupted!" << endl;
     pack->loadDataBuffer((char*)"GREMLIN LOL");
   }
-  else seqNum = (seqNum) ? false : true; 
+  else seqNum++; 
   cout << "Seq. num: " << pack->getSequenceNum() << endl;
   cout << "Checksum: " << pack->getCheckSum() << endl;
   cout << "Message: "  << pack->getDataBuffer() << endl;
