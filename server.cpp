@@ -270,8 +270,8 @@ bool sendPacket(){
 	cout << "dropPck: " << dropPck << endl;
 	cout << "delayPck: " << delayPck << endl;
 
-	if (dropPck == 1) return false;
-	if (delayPck == 1) sleep(delayT);
+	if (dropPck == true) return false;
+	if (delayPck == true) sleep(delayT);
 
 	cout << "Made it to sending mode..." << endl;
 
@@ -316,22 +316,22 @@ void handleNak(int& x) {
 }
 
 bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
-  bool dropPacket = false;
-  bool delayPacket = false;
+
   bool* packStatus = new bool[2];
   int r = rand() % 100;
 
   cout << "Corruption probability: " << corruptProb << endl;
   cout << "Random number: " << r << endl;
 
+  packStatus[0] = false;
+  packStatus[1] = false;
+
   if(r <= (lossProb)){
-    dropPacket = true;
-	packStatus[0] = dropPacket;
+	packStatus[0] = true;
     cout << "Dropped!" << endl;
   }
   else if(r <= (delayProb)){
-	  delayPacket = true;
-	  packStatus[1] = delayPacket;
+	  packStatus[1] = true;
 	  cout << "Delayed!" << endl;
   }
   else if(r <= (corruptProb)){
