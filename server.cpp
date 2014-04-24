@@ -272,6 +272,9 @@ bool sendPacket(){
 
 	if (dropPck == 1) return false;
 	if (delayPck == 1) sleep(delayT);
+
+	cout << "Made it to sending mode..." << endl;
+
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
 		return false;
