@@ -2,6 +2,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <time.h>
 #include <string.h>
 #include <iostream>
 #include <fstream>
@@ -234,10 +235,17 @@ bool sendFile() {
     p = createPacket(x);
     if(!sendPacket()) continue;
 
+	clock_t t;
+	t = clock();
+
     if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 		cout << "=== ACK TIMEOUT" << endl;
-		sendPacket();
+		x--;
+		continue;
 	}
+
+	t = clock() - t;
+	cout << "We took " << ((float)t/CLOCKS_PER_SEC) << " to receive that ack." << endl;
 
     if(isAck()) { 
       handleAck();
@@ -273,7 +281,6 @@ bool sendPacket(){
 
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
-		cout << "Error number: " << errno << endl;
 		return false;
     }
     return true;
