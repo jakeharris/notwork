@@ -17,6 +17,7 @@
 #define BUFSIZE 121
 #define FILENAME "Testfile"
 #define TIMEOUT 100 //in ms
+#define WIN_SIZE 16
 
 using namespace std;
 
@@ -30,6 +31,7 @@ void handleAck();
 void handleNak(int& x);
 bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb);
 Packet createPacket(int index);
+void loadWindow();
 bool sendPacket();
 
 bool seqNum = true;
@@ -46,11 +48,13 @@ int probLoss;
 int probDelay;
 int delayT;
 Packet p;
+Packet window[16];
 int length;
 bool dropPck;
 bool delayPck;
 int toms;
 unsigned char b[BUFSIZE];
+int currentIndex;
 
 int main(int argc, char** argv) {
   
@@ -61,13 +65,15 @@ int main(int argc, char** argv) {
   unsigned char packet[PAKSIZE + 1];
   rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
   
+  loadWindow();
   sendFile();
   
   return 0;
 }
 
 bool init(int argc, char** argv){
-  
+  currentIndex = 0; //initialize value of currentIndex at start of program
+
   if(argc != 6) { 
     cout << USAGE << endl;
     return false;
@@ -231,10 +237,18 @@ bool loadFile() {
   return true;
 }
 
-bool sendFile() {
+void loadWindow(){
+	for(int i = 0; i <= WIN_SIZE; i++) {
+		currentIndex = i; //update currentIndex for later use
+		window[i] = createPacket(i);
+	}
+}
 
-  for(int x = 0; x <= (length / BUFSIZE) + 1; x++) {
-    p = createPacket(x);
+bool sendFile() {
+	/*Currently causes the program to only send the first 16 packets of file out
+		requires additional code later to sendFile again with updated window*/
+  for(int x = 0; x <= WIN_SIZE; x++) {
+    p = window[x];
 
     if(!sendPacket()) continue;
 
