@@ -267,6 +267,9 @@ bool sendPacket(){
 	dropPck = pckStatus[0];
 	delayPck = pckStatus[1];
 
+	cout << "dropPck: " << dropPck << endl;
+	cout << "delayPck: " << delayPck << endl;
+
 	if (dropPck) return false;
 	if (delayPck) sleep(delayT);
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
