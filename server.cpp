@@ -263,13 +263,16 @@ Packet createPacket(int index){
 bool sendPacket(){
     int pc = probCorrupt; int pl = probLoss; int pd = probDelay;
 	bool* pckStatus = gremlin(&p, pc, pl, pd);
-    if(((dropPck = pckStatus[0]) == false) && ((delayPck = pckStatus[1]) == false)){
-      if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
-        cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
-        return false;
-      }
-      return true;
-    } else return false;
+
+	if (dropPck = pckStatus[0]) return false;
+	if (delayPck = pckStatus[1]) {
+		sleep(delayT);
+	}
+    if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
+		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+		return false;
+    }
+    return true;
 }
 
 bool isAck() {
