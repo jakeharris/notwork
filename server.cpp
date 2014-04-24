@@ -234,8 +234,10 @@ bool sendFile() {
   for(int x = 0; x <= (length / BUFSIZE) + 1; x++) {
     p = createPacket(x);
 
-	clock_t t;
-	t = clock();
+	struct timeval t1, t2;
+	gettimeofday(&t1, NULL);
+
+	cout << "t: " << t << endl;
 
     if(!sendPacket()) continue;
 
@@ -245,8 +247,8 @@ bool sendFile() {
 		continue;
 	}
 
-	t = clock() - t;
-	cout << "We took " << ((float)t/CLOCKS_PER_SEC) << " to receive that ack." << endl;
+	gettimeofday(&t2, NULL);
+	cout << "We took " << 1000*(t1.tv_usec - t2.tv_usec) << " ms to receive that ack." << endl;
 
     if(isAck()) { 
       handleAck();
