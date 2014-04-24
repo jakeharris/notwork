@@ -118,6 +118,10 @@ bool init(int argc, char** argv){
 bool isvpack(unsigned char * p) {
   cout << endl << "=== IS VALID PACKET TESTING" << endl;
 
+  memset(sns, 0, BUFSIZE);
+  memset(css, 0, BUFSIZE);
+  memset(db, 0, BUFSIZE);
+
   char * sns = new char[2];
   memcpy(sns, &p[0], 1);
   sns[1] = '\0';
