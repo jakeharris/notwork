@@ -233,10 +233,11 @@ bool sendFile() {
 
   for(int x = 0; x <= (length / BUFSIZE) + 1; x++) {
     p = createPacket(x);
-    if(!sendPacket()) continue;
 
 	clock_t t;
 	t = clock();
+
+    if(!sendPacket()) continue;
 
     if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 		cout << "=== ACK TIMEOUT" << endl;
