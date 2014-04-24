@@ -225,7 +225,7 @@ bool loadFile() {
 
 bool sendFile() {
 
-  for(int x = 0; x <= length / BUFSIZE; x++) {
+  for(int x = 0; x <= (length / BUFSIZE) + 1; x++) {
     p = createPacket(x);
     if(!sendPacket()) continue;
 
