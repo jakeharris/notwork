@@ -231,9 +231,9 @@ bool isvpack(unsigned char * p) {
   memcpy(sns, &p[0], 1);
   sns[1] = '\0';
 
-  char * css = new char[7];
+  char * css = new char[6];
   memcpy(css, &p[1], 6);
-  css[6] = '\0';
+  css[5] = '\0';
       
   char * db = new char[121 + 1];
   memcpy(db, &p[2], 121);
