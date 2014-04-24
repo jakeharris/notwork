@@ -267,13 +267,8 @@ bool sendPacket(){
 	dropPck = pckStatus[0];
 	delayPck = pckStatus[1];
 
-	cout << "dropPck: " << dropPck << endl;
-	cout << "delayPck: " << delayPck << endl;
-
 	if (dropPck == true) return false;
 	if (delayPck == true) usleep(delayT);
-
-	cout << "Made it to sending mode..." << endl;
 
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
@@ -331,6 +326,7 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   else if(r <= (delayProb)){
 	  packStatus[1] = true;
 	  cout << "Delayed!" << endl;
+	  seqNum = (seqNum) ? false : true;
   }
   else if(r <= (corruptProb)){
     cout << "Corrupted!" << endl;
