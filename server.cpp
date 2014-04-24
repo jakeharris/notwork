@@ -248,7 +248,7 @@ bool sendFile() {
 	}
 
 	gettimeofday(&t2, NULL);
-	cout << "We took " << (t2.tv_usec - t1.tv_usec)/1000 << " ms to receive that ack." << endl;
+	cout << "We took " << t2.tv_usec - t1.tv_usec << " us to receive that ack." << endl;
 	cout << "We had " << toms << " ms to take." << endl;
 
     if(isAck()) { 
