@@ -236,7 +236,7 @@ bool isvpack(unsigned char * p) {
   css[5] = '\0';
       
   char * db = new char[121 + 1];
-  memcpy(db, &p[2], 121);
+  memcpy(db, &p[7], 121);
   db[121] = '\0';
 
   cout << "Seq. num: " << sns << endl;
@@ -293,7 +293,6 @@ bool getFile(){
       cout << "Seq. num: " << packet[0] << endl;
       cout << "Checksum: " << css << endl;
       cout << "Received message: " << dataPull << endl;
-      cout << "Sent response: ";
       if(isvpack(packet)) {
         ack = ACK;
         seqNum = (seqNum) ? false : true;
@@ -301,6 +300,7 @@ bool getFile(){
       } else { 
         ack = NAK;
       }
+      cout << "Sent response: ";
       cout << ((ack == ACK) ? "ACK" : "NAK") << endl;
       Packet p ((seqNum) ? false : true, reinterpret_cast<const char *>(dataPull));
       p.setCheckSum(boost::lexical_cast<int>(css));
