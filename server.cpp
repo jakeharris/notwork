@@ -17,6 +17,18 @@
 
 using namespace std;
 
+bool isvpack(unsigned char * p);
+bool init(int argc, char** argv);
+bool loadFile();
+bool getFile();
+bool sendFile();
+bool isAck();
+void handleAck();
+void handleNak(int& x);
+bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb);
+Packet createPacket(int index);
+bool sendPacket();
+
 bool seqNum = true;
 struct sockaddr_in a;
 struct sockaddr_in ca;
@@ -32,21 +44,9 @@ int probDelay;
 int delayT;
 Packet p;
 int length;
-unsigned char b[BUFSIZE];
 bool dropPck;
 bool delayPck;
-
-bool isvpack(unsigned char * p);
-bool init(int argc, char** argv);
-bool loadFile();
-bool getFile();
-bool sendFile();
-bool isAck();
-void handleAck();
-void handleNak(int& x);
-bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb);
-Packet createPacket(int index);
-bool sendPacket();
+unsigned char b[BUFSIZE];
 
 int main(int argc, char** argv) {
   
