@@ -226,17 +226,14 @@ bool gremlin(Packet * pack, int corruptProb, int lossProb){
 
 bool isvpack(unsigned char * p) {
   cout << endl << "=== IS VALID PACKET TESTING" << endl;
-  
-  memset(sns, 0, BUFSIZE);
-  memset(css, 0, BUFSIZE);
-  memset(db, 0, BUFSIZE);
 
   char * sns = new char[2];
   memcpy(sns, &p[0], 1);
   sns[1] = '\0';
 
-  char * css = new char[6];
+  char * css = new char[7];
   memcpy(css, &p[1], 6);
+  css[6] = '\0';
       
   char * db = new char[121 + 1];
   memcpy(db, &p[2], 121);
