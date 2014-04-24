@@ -270,8 +270,8 @@ bool sendPacket(){
 	cout << "dropPck: " << dropPck << endl;
 	cout << "delayPck: " << delayPck << endl;
 
-	if (dropPck) return false;
-	if (delayPck) sleep(delayT);
+	if (dropPck == 1) return false;
+	if (delayPck == 1) sleep(delayT);
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
 		return false;
