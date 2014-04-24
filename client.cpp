@@ -266,20 +266,11 @@ bool getFile(){
   int rlen;
   int ack;
   
-  bool isSeqNumSet = true;
   for (;;) {
     unsigned char packet[PAKSIZE + 1];
     unsigned char dataPull[PAKSIZE - 7 + 1];
     rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&sa, &salen);
-    if(!isSeqNumSet) {
-      isSeqNumSet = true;
-      char * str = new char[1];
-      memcpy(str, &packet[0], 1);
-      
-      cout << "str: " << str << endl;
-      
-      seqNum = boost::lexical_cast<int>(str);
-    }
+
     for(int x = 0; x < PAKSIZE - 7; x++) {
       dataPull[x] = packet[x + 7];
     }
