@@ -1,6 +1,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include <string.h>
 #include <iostream>
 #include <fstream>
@@ -151,7 +152,6 @@ bool isvpack(unsigned char * p) {
   return true;
 }
 
-
 bool getFile(){
 
   /* Loop forever, waiting for messages from a client. */
@@ -271,7 +271,7 @@ bool sendPacket(){
 	cout << "delayPck: " << delayPck << endl;
 
 	if (dropPck == true) return false;
-	if (delayPck == true) sleep(delayT);
+	if (delayPck == true) usleep(delayT);
 
 	cout << "Made it to sending mode..." << endl;
 
@@ -281,7 +281,6 @@ bool sendPacket(){
     }
     return true;
 }
-
 bool isAck() {
     cout << endl << "=== SERVER RESPONSE TEST" << endl;
     cout << "Data: " << b << endl;
@@ -314,7 +313,6 @@ void handleNak(int& x) {
       if(!pk.chksm()) x--; 
       else x = (x - 2 > 0) ? x - 2 : 0;
 }
-
 bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
 
   bool* packStatus = new bool[2];
