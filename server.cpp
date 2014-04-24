@@ -264,8 +264,11 @@ bool sendPacket(){
     int pc = probCorrupt; int pl = probLoss; int pd = probDelay;
 	bool* pckStatus = gremlin(&p, pc, pl, pd);
 
-	if ((dropPck = pckStatus[0]) == true) return false;
-	if ((delayPck = pckStatus[1]) == true) sleep(delayT);
+	dropPck = pckStatus[0];
+	delayPck = pckStatus[1];
+
+	if (dropPck) return false;
+	if (delayPck) sleep(delayT);
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
 		return false;
