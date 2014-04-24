@@ -45,6 +45,7 @@ socklen_t salen;
 string fstr;
 bool dropPck;
 Packet p;
+int delayT;
 unsigned char b[BUFSIZE];
 
 int main(int argc, char** argv) {
@@ -67,6 +68,9 @@ bool init(int argc, char** argv) {
 
   hs = string("131.204.14.") + argv[1]; /* Needs to be updated? Might be a string like "tux175.engr.auburn.edu." */
   port = 10038; /* Can be any port within 10038-10041, inclusive. */
+
+  char* delayTStr = argv[2];
+  delayT = boost::lexical_cast<int>(delayTStr);
 
   /*if(!loadFile()) {
     cout << "Loading file failed. (filename FILENAME)" << endl;
@@ -297,6 +301,8 @@ bool getFile(){
       Packet p ((seqNum) ? false : true, reinterpret_cast<const char *>(dataPull));
       p.setCheckSum(boost::lexical_cast<int>(css));
       p.setAckNack(ack);
+
+	  if(packet[6] == '1') usleep(delayT*1000);
 
       if(sendto(s, p.str(), PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
