@@ -81,7 +81,6 @@ bool init(int argc, char** argv){
   delayT = boost::lexical_cast<int>(delayTStr);
   
   struct timeval timeout;
-  timeout.tv_sec = 0;
   timeout.tv_usec = TIMEOUT * 1000;
 
   /* Create our socket. */
@@ -274,6 +273,7 @@ bool sendPacket(){
 
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+		cout << "Error number: " << errno << endl;
 		return false;
     }
     return true;
