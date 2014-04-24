@@ -7,7 +7,7 @@
 #include <boost/lexical_cast.hpp>
 #include "packet.h"
 
-#define USAGE "Usage:\r\nc [tux machine number] [probability of packet corruption in int form] [probability of packet loss in int form]\r\n"
+#define USAGE "Usage:\r\nc \r\n[tux machine number] \r\n[probability of packet corruption in int form] \r\n[probability of packet loss in int form] \r\n[probability of packet delay] \r\n[length of delay in ms] \r\n"
 #define PORT 10038
 #define PAKSIZE 128
 #define ACK 0
@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
 
 bool init(int argc, char** argv){
   
-  if(argc != 4) { 
+  if(argc != 6) { 
     cout << USAGE << endl;
     return false;
   }
