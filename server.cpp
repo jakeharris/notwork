@@ -28,10 +28,13 @@ string fstr;
 char * file;
 int probCorrupt;
 int probLoss;
+int probDelay;
+int delayT;
 Packet p;
 int length;
 unsigned char b[BUFSIZE];
 bool dropPck;
+bool delayPck;
 
 bool isvpack(unsigned char * p);
 bool init(int argc, char** argv);
@@ -41,7 +44,7 @@ bool sendFile();
 bool isAck();
 void handleAck();
 void handleNak(int& x);
-bool gremlin(Packet * pack, int corruptProb, int lossProb);
+bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb);
 Packet createPacket(int index);
 bool sendPacket();
 
@@ -70,6 +73,10 @@ bool init(int argc, char** argv){
   probCorrupt = boost::lexical_cast<int>(probCorruptStr);
   char * probLossStr = argv[3];
   probLoss = boost::lexical_cast<int>(probLossStr);
+  char * probDelayStr = argv[4];
+  probDelay = boost::lexical_cast<int>(probDelayStr);
+  char* delayTStr = argv[5];
+  delayT = boost::lexical_cast<int>(delayTStr);
   
   
   /* Create our socket. */
@@ -243,8 +250,9 @@ Packet createPacket(int index){
 }
 
 bool sendPacket(){
-    int pc = probCorrupt; int pl = probLoss;
-    if((dropPck = gremlin(&p, pc, pl)) == false){
+    int pc = probCorrupt; int pl = probLoss; int pd = probDelay;
+	bool* pckStatus = gremlin(&p, pc, pl, pd);
+    if(((dropPck = pckStatus[0]) == false) && ((delayPck = pckStatus[1]) == false)){
       if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
         cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
         return false;
@@ -288,8 +296,10 @@ void handleNak(int& x) {
       else x = (x - 2 > 0) ? x - 2 : 0;
 }
 
-bool gremlin(Packet * pack, int corruptProb, int lossProb){
+bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   bool dropPacket = false;
+  bool delayPacket = false;
+  bool* packStatus = new bool[2];
   int r = rand() % 100;
 
   cout << "Corruption probability: " << corruptProb << endl;
@@ -297,8 +307,14 @@ bool gremlin(Packet * pack, int corruptProb, int lossProb){
 
   if(r <= (lossProb)){
     dropPacket = true;
+	packStatus[0] = dropPacket;
     cout << "Dropped!" << endl;
-  }  
+  }
+  else if(r <= (delayProb)){
+	  delayPacket = true;
+	  packStatus[1] = delayPacket;
+	  cout << "Delayed!" << endl;
+  }
   else if(r <= (corruptProb)){
     cout << "Corrupted!" << endl;
     pack->loadDataBuffer((char*)"GREMLIN LOL");
@@ -308,5 +324,5 @@ bool gremlin(Packet * pack, int corruptProb, int lossProb){
   cout << "Checksum: " << pack->getCheckSum() << endl;
   cout << "Message: "  << pack->getDataBuffer() << endl;
 
-  return dropPacket;
+  return packStatus;
 }
