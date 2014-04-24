@@ -2,7 +2,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <time.h>
+#include <sys/time.h>
 #include <string.h>
 #include <iostream>
 #include <fstream>
@@ -236,8 +236,6 @@ bool sendFile() {
 
 	struct timeval t1, t2;
 	gettimeofday(&t1, NULL);
-
-	cout << "t: " << t << endl;
 
     if(!sendPacket()) continue;
 
