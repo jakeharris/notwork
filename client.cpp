@@ -38,6 +38,8 @@ int probLoss;
 string hs;
 short int port;
 char * file;
+char* window[16]; //packet window
+int windowBase; //used to determine position in window of arriving packets
 int length;
 struct sockaddr_in a;
 struct sockaddr_in sa;
@@ -63,7 +65,7 @@ int main(int argc, char** argv) {
 }
 
 bool init(int argc, char** argv) {
-  
+  windowBase = 0; //initialize windowBase
   s = 0;
 
   hs = string("131.204.14.") + argv[1]; /* Needs to be updated? Might be a string like "tux175.engr.auburn.edu." */
@@ -275,6 +277,12 @@ bool getFile(){
     unsigned char dataPull[PAKSIZE - 7 + 1];
     rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&sa, &salen);
 
+	/* Begin Window Loading */
+	int tempSeqNum = boost::lexical_cast<int>(packet[0]);
+	int properIndex = tempSeqNum - windowBase;
+
+	window[properIndex] = packet;
+
     for(int x = 0; x < PAKSIZE - 7; x++) {
       dataPull[x] = packet[x + 7];
     }
@@ -291,6 +299,7 @@ bool getFile(){
       if(isvpack(packet)) {
         ack = ACK;
         seqNum = (seqNum) ? false : true;
+		windowBase++; //increment base of window
         file << dataPull;
 		file.flush();
       } else { 

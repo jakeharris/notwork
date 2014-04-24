@@ -295,7 +295,7 @@ bool sendPacket(){
 	delayPck = pckStatus[1];
 
 	if (dropPck == true) return false;
-	if (delayPck == true) &p.setAckNack(1);
+	if (delayPck == true) p.setAckNack(1);
 
     if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
