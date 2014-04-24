@@ -84,7 +84,7 @@ bool init(int argc, char** argv){
   
   struct timeval timeout;
   timeout.tv_usec = TIMEOUT * 1000;
-  toms = TIMEOUT * 1000;
+  toms = TIMEOUT;
 
   /* Create our socket. */
   if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -236,10 +236,10 @@ bool sendFile() {
   for(int x = 0; x <= (length / BUFSIZE) + 1; x++) {
     p = createPacket(x);
 
+    if(!sendPacket()) continue;
+
 	struct timeval t1, t2;
 	gettimeofday(&t1, NULL);
-
-    if(!sendPacket()) continue;
 
     if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 		cout << "=== ACK TIMEOUT" << endl;
