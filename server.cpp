@@ -49,7 +49,7 @@ Packet p;
 int length;
 bool dropPck;
 bool delayPck;
-struct timeval timeout;
+int toms;
 unsigned char b[BUFSIZE];
 
 int main(int argc, char** argv) {
@@ -82,7 +82,9 @@ bool init(int argc, char** argv){
   char* delayTStr = argv[5];
   delayT = boost::lexical_cast<int>(delayTStr);
   
+  struct timeval timeout;
   timeout.tv_usec = TIMEOUT * 1000;
+  toms = TIMEOUT * 1000;
 
   /* Create our socket. */
   if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -247,7 +249,7 @@ bool sendFile() {
 
 	gettimeofday(&t2, NULL);
 	cout << "We took " << (t2.tv_usec - t1.tv_usec)/1000 << " ms to receive that ack." << endl;
-	cout << "We had " << timeout.tv_usec/1000 << " ms to take." << endl;
+	cout << "We had " << toms << " ms to take." << endl;
 
     if(isAck()) { 
       handleAck();
