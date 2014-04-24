@@ -244,7 +244,8 @@ Packet createPacket(int index){
     cout << endl;
     cout << "=== TRANSMISSION START" << endl;
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
-    if(index * BUFSIZE + BUFSIZE > length) {
+    //if(index * BUFSIZE + BUFSIZE > length) {
+	if(mstr.length < BUFSIZE) {
 	  cout << "mstr, before null char: " << endl << mstr << endl;
 	  cout << "Starting position: " << index * BUFSIZE + BUFSIZE << endl;
 	  cout << "Length of file: " << length << endl;
