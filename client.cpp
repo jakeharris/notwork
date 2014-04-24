@@ -31,7 +31,7 @@ bool isAck();
 void handleAck();
 void handleNak(int& x);
 
-bool seqNum;
+int seqNum;
 int s;
 int probCorrupt;
 int probLoss;
@@ -110,7 +110,7 @@ bool init(int argc, char** argv) {
 
   cout << "File: " << endl << fstr << endl << endl;*/
 
-  seqNum = true;
+  seqNum = 0;
   dropPck = false;
   return true;
 }
@@ -304,7 +304,7 @@ bool getFile(){
       cout << "Received message: " << dataPull << endl;
       if(isvpack(packet)) {
         ack = ACK;
-        seqNum = (seqNum) ? false : true;
+        seqNum++;
 		windowBase++; //increment base of window
         file << dataPull;
 		file.flush();
@@ -313,7 +313,7 @@ bool getFile(){
       }
       cout << "Sent response: ";
       cout << ((ack == ACK) ? "ACK" : "NAK") << endl;
-      Packet p ((seqNum) ? false : true, reinterpret_cast<const char *>(dataPull));
+      Packet p (seqNum++, reinterpret_cast<const char *>(dataPull));
       p.setCheckSum(boost::lexical_cast<int>(css));
       p.setAckNack(ack);
 
