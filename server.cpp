@@ -80,7 +80,9 @@ bool init(int argc, char** argv){
   char* delayTStr = argv[5];
   delayT = boost::lexical_cast<int>(delayTStr);
   
-  static int timeout = TIMEOUT;
+  struct timeval timeout;
+  timeout.tv_sec = 0;
+  timeout.tv_usec = TIMEOUT * 1000;
 
   /* Create our socket. */
   if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -233,8 +235,8 @@ bool sendFile() {
     p = createPacket(x);
     if(!sendPacket()) continue;
 
-    while(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
-		cout << "Timed out. Resending..." << endl;
+    if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
+		cout << "=== ACK TIMEOUT" << endl;
 		sendPacket();
 	}
 
