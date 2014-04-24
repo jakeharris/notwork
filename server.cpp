@@ -49,6 +49,7 @@ Packet p;
 int length;
 bool dropPck;
 bool delayPck;
+struct timeval timeout;
 unsigned char b[BUFSIZE];
 
 int main(int argc, char** argv) {
@@ -81,7 +82,6 @@ bool init(int argc, char** argv){
   char* delayTStr = argv[5];
   delayT = boost::lexical_cast<int>(delayTStr);
   
-  struct timeval timeout;
   timeout.tv_usec = TIMEOUT * 1000;
 
   /* Create our socket. */
