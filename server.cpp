@@ -14,6 +14,7 @@
 #define NAK 1
 #define BUFSIZE 121
 #define FILENAME "Testfile"
+#define TIMEOUT 100 //in ms
 
 using namespace std;
 
@@ -78,12 +79,15 @@ bool init(int argc, char** argv){
   char* delayTStr = argv[5];
   delayT = boost::lexical_cast<int>(delayTStr);
   
-  
+  static int timeout = TIMEOUT;
+
   /* Create our socket. */
   if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     cout << "Socket creation failed. (socket s)" << endl;
     return 0;
   }
+
+  setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
 
   /* 
    * Bind our socket to an IP (whatever the computer decides) 
@@ -229,6 +233,11 @@ bool sendFile() {
     p = createPacket(x);
     if(!sendPacket()) continue;
 
+    while(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
+		cout << "Timed out. Resending..." << endl;
+		sendPacket();
+	}
+
     if(isAck()) { 
       handleAck();
     } else { 
@@ -264,8 +273,6 @@ bool sendPacket(){
 }
 
 bool isAck() {
-    recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen);
-
     cout << endl << "=== SERVER RESPONSE TEST" << endl;
     cout << "Data: " << b << endl;
     if(b[6] == '0') return true;
