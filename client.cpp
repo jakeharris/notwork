@@ -288,6 +288,7 @@ bool getFile(){
         ack = ACK;
         seqNum = (seqNum) ? false : true;
         file << dataPull;
+		file.flush();
       } else { 
         ack = NAK;
       }
