@@ -1,7 +1,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <iostream>
 class Packet{
   //Private variables
