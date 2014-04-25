@@ -242,8 +242,8 @@ void loadWindow(){
 bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
+	base = 0;
 	while(base * BUFSIZE < length) {
-		base = 0;
 		loadWindow();
 
 		for(int x = 0; x < WIN_SIZE; x++) {
