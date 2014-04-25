@@ -316,9 +316,7 @@ bool getFile(){
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 
-	  int * ackval = windowBase;
-
-      if(sendto(s, ackval, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
+      if(sendto(s, *windowBase, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
         return 0;
       }
