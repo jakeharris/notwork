@@ -281,16 +281,13 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		while(finale < WIN_SIZE - 1) {
-			cout << endl << "beginning of loop " << finale << endl;
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
 			FD_SET(s, &stReadFDS);
 
 			max_sd = s;
-			cout << endl << "before select" << endl;
 			int t = select(max_sd + 1, &stReadFDS, NULL, NULL, &stTimeOut);
-			cout << "after select" << endl;
 			if (t == -1){
 				perror("select()");
 			}
@@ -302,24 +299,20 @@ bool sendFile() {
 			desc_ready = t;
 			for(int u = 0; u <= max_sd &&  desc_ready > 0; u++){
 				if(finale + desc_ready < WIN_SIZE){
-					if(finale++ == WIN_SIZE -2) break;
+					if(finale++ == WIN_SIZE - 2) break;
 				}
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
 				} else hasRead = true;
-				cout << "hasRead" << endl;
 				if(!hasRead) continue;
 				if(isAck()) {
-					cout << "if isAck()" << endl;
 					handleAck();
 					finale++;
-					cout << "Finale is: " << finale << endl;
 					if (finale == WIN_SIZE - 1) break;
 				} else { 
 					cout << "Not an ACK!" << endl; 
 				}
 			}
-			cout << "end of loop " << finale << endl;
 			/*if(finale > 0 && base == finale) {cout << "Finale: " << finale << endl; break;}
 			memset(b, 0, BUFSIZE);
 			}*/
