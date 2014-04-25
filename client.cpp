@@ -330,9 +330,13 @@ bool getFile(){
 
       if(sendto(s, ackval, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
+		cout << "errno: " << errno << endl;
         return 0;
       }
+	  delete sns;
       delete css;
+	  delete wbs;
+	  delete ackval;
     }
   }
   file.close();
