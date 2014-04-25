@@ -259,6 +259,10 @@ bool isvpack(unsigned char * p) {
 
   // change to validate based on checksum and sequence number
 
+  cout << "sn: " << sn << endl;
+  cout << "base: " << base << endl;
+  cout << "base + WIN_SIZE: " << base + WIN_SIZE << endl;
+
   if(sn >= base && sn < base + WIN_SIZE) return false;
   if(cs != pk.generateCheckSum()) return false;
   return true;
