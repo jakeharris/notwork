@@ -253,6 +253,13 @@ void loadWindow(){
 bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
+	fd_set stReadFDS;
+	struct timeval stTimeOut;
+
+	FD_ZERO(&stReadFDS);
+	stTimeOut.tv_usec = 1000 * TIMEOUT;
+	FD_SET(s, &stReadFDS);
+
 	base = 0;
 	int finale = -1;
 	while(base * BUFSIZE < length) {
@@ -264,12 +271,14 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
-			if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
-				cout << "=== ACK TIMEOUT" << endl;
-				x--;
-				continue;
+			int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
+			if (t != 0) {
+				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
+					cout << "=== ACK TIMEOUT" << endl;
+					x--;
+					continue;
+				}
 			}
-
 			if(isAck()) { 
 				handleAck();
 			} else { 
