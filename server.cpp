@@ -236,13 +236,13 @@ bool loadFile() {
 void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i-base] = createPacket(i);
-		/*if(strlen(window[i-base].getDataBuffer()) < BUFSIZE && window[i-base].chksm()) { 
+		if(strlen(window[i-base].getDataBuffer()) < BUFSIZE && window[i-base].chksm()) { 
 			cout << "In loadWindow's secret base, index is: " << i-base << endl;
-			for(++i; i < base + WIN_SIZE; i++){
+			/*for(++i; i < base + WIN_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
-			}
+			}*/
 			return;
-		}*/
+		}
 		cout << "window[i-base] seq. num: " << window[i-base].getSequenceNum() << endl;
 	}
 	
