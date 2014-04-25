@@ -286,10 +286,10 @@ Packet createPacket(int index){
 	
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
 	cout << "mstr: " << mstr << endl;
-    mstr = fstr.substr(index * BUFSIZE, BUFSIZE + 1);
-	cout << "mstr + 2: " << mstr << endl;
+
 	if(mstr.length() < BUFSIZE) {
-      mstr[length - (index * BUFSIZE)] = '\0';
+		cout << "Null terminated mstr." << endl;
+		mstr[length - (index * BUFSIZE)] = '\0';
     }
     return Packet (index, mstr.c_str());
 }
