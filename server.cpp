@@ -235,7 +235,7 @@ bool loadFile() {
 
 void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
-		window[i] = createPacket(i);
+		window[i-base] = createPacket(i);
 	}
 }
 
@@ -300,13 +300,13 @@ bool sendPacket(){
 bool isAck() {
     cout << endl << "=== SERVER RESPONSE TEST" << endl;
     cout << "Data: " << b << endl;
-	cout << "Window base: " << base << endl;
     if(b[6] == '0') return true;
     else return false;
 }
 void handleAck() {
 	int ack = boost::lexical_cast<int>(b);
 	if(base < ack) base = ack;
+	cout << "Window base: " << base << endl;
 }
 void handleNak(int& x) {
 
