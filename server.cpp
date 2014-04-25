@@ -255,7 +255,7 @@ bool sendFile() {
 
 	for(int x = 0; x <= WIN_SIZE; x++) {
 		p = window[x];
-		cout << "Packet data: " << endl << window[x] << endl;
+		cout << "Packet data: " << endl << p.str() << endl;
 		if(!sendPacket()) continue;
 	}
 	for(int x = 0; x <= WIN_SIZE; x++) {
