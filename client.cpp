@@ -254,10 +254,10 @@ bool isvpack(unsigned char * p) {
   pk.setSequenceNum(sn);
 
   cout << "base: " << base << endl;
-  cout << "(bottom, sn, top): " << base % 32 << ", " << sn << ", " << (base % 32) + WIN_SIZE << endl;
+  cout << "(bottom, sn, top): " << base % 32 << ", " << sn << ", " << (base % 32) + WIN_SIZE - 1 << endl;
 
-  if(!(sn >= (base % 32) && sn <= (base % 32) + WIN_SIZE - 1)) return false;
-  if(cs != pk.generateCheckSum()) return false;
+  if(!(sn >= (base % 32) && sn <= (base % 32) + WIN_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
+  if(cs != pk.generateCheckSum()) { cout << "Bad checksum." << endl; return false; }
   return true;
 }
 
