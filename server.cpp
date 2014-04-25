@@ -236,6 +236,7 @@ bool loadFile() {
 void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i-base] = createPacket(i);
+		cout << "window[i-base] seq. num: " << window[i-base].getSequenceNum() << endl;
 		if(strlen(window[i-base].getDataBuffer()) < BUFSIZE - 1 && window[i-base].getDataBuffer()[0] != 'G') { 
 			for(++i; i < base + WIN_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
