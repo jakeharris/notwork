@@ -296,6 +296,7 @@ bool sendFile() {
 			}
 			if (t == 0) {
 				cout << "=== ACK TIMEOUT (select)" << endl;
+				if (finale == 13) break;
 
 			} 
 			desc_ready = t;
