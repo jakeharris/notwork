@@ -279,7 +279,7 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		while(finale < 15) {
-			cout << endl << "beginning of loop " << x << endl;
+			cout << endl << "beginning of loop " << finale << endl;
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
