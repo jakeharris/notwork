@@ -308,6 +308,7 @@ bool sendFile() {
 					handleAck();
 					finale++;
 					cout << "Finale is: " << finale << endl;
+					if (finale == 14) break;
 				} else { 
 					cout << "Not an ACK!" << endl; 
 				}
