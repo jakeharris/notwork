@@ -284,7 +284,7 @@ bool sendFile() {
 			} else {
 				cout << "=== ACK TIMEOUT" << endl;
 			}
-			if(b[0] == 0) continue;
+			//if(b[0] == 0) continue;
 			if(isAck()) { 
 				handleAck();
 			} else { 
