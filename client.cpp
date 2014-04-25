@@ -240,7 +240,7 @@ bool isvpack(unsigned char * p) {
   sns[2] = '\0';
 
   char * css = new char[6];
-  memcpy(css, &p[2], 6);
+  memcpy(css, &p[2], 5);
   css[5] = '\0';
       
   char * db = new char[121 + 1];
