@@ -253,7 +253,7 @@ bool sendFile() {
 	while(base * BUFSIZE < length) {
 		loadWindow();
 
-		cout << "packet " << base << ": " << window[0].str() << endl;
+		cout << "packet " << base + 1 << ": " << window[1].str() << endl;
 
 		for(int x = 0; x < WIN_SIZE; x++) {
 			p = window[x];
