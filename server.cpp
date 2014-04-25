@@ -271,8 +271,9 @@ bool sendFile() {
 			p = window[x];
 			if(!sendPacket()) continue;
 		}
-		for(int x = 0; x < WIN_SIZE - 2; x++) {
+		for(int x = 0; x < WIN_SIZE; x++) {
 			cout << "begin loop no. " << x << endl;
+			if(x == WIN_SIZE - 1) break;
 			int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
 			if (t != 0) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
