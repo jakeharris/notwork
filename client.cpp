@@ -275,7 +275,7 @@ bool getFile(){
     unsigned char dataPull[BUFSIZE];
     rlen = recvfrom(s, packet, PAKSIZE + 1, 0, (struct sockaddr *)&sa, &salen);
 
-	string pkstr (packet);
+	string pkstr (&packet);
 
 	if(pkstr[0] == "\0") break;
 
