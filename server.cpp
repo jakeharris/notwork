@@ -407,7 +407,7 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   }
 
   char substring[49];
-  memcpy(substring, &(pack->getDataBuffer()), 48);
+  memcpy(substring, (pack->getDataBuffer()), 48);
   substring[48] = '\0';
 
   cout << "Seq. num: " << pack->getSequenceNum() << endl;
