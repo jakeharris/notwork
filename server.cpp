@@ -254,6 +254,7 @@ bool sendFile() {
 
 		for(int x = 0; x < WIN_SIZE; x++) {
 			p = window[x];
+			cout << "p.str(): " << p.str() << endl;
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
@@ -284,7 +285,7 @@ Packet createPacket(int index){
 	cout << "file index (index * BUFSIZE): " << index * BUFSIZE << endl;
 	cout << "file length: " << length << endl;
 	
-    string mstr = fstr.substr(index * BUFSIZE, BUFSIZE + 1);
+    string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
 	cout << "mstr: " << mstr << endl;
 
 	if(mstr.length() < BUFSIZE) {

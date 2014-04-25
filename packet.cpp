@@ -13,7 +13,6 @@
   }
   Packet::Packet (int sn, const char db[122]){
     sequenceNum = sn % 32;
-	std::cout << "db: " << db << std::endl;
     strcpy(dataBuff, db);
     checkSum = generateCheckSum();
     ackNack =0;
