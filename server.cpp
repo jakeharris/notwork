@@ -254,6 +254,7 @@ bool sendFile() {
 		loadWindow();
 
 		cout << "packet " << base + 1 << ": " << window[1].str() << endl;
+		cout << "packet " << base + 2 << ": " << window[2].str() << endl;
 
 		for(int x = 0; x < WIN_SIZE; x++) {
 			p = window[x];
