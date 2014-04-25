@@ -272,6 +272,7 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
+			cout << "begin loop no. " << x << endl;
 			int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
 			if (t != 0) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
@@ -290,7 +291,7 @@ bool sendFile() {
 				handleAck();
 				//handleNak(x);
 			}
-			cout << "loop no. " << x << endl;
+			cout << "complete loop no. " << x << endl;
 			if(finale > 0 && base == finale) break;
 			memset(b, 0, BUFSIZE);
 		}
