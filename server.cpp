@@ -310,7 +310,7 @@ bool sendFile() {
 					cout << "Not an ACK!" << endl; 
 				}
 			}
-			cout << "end of loop " << x << endl;
+			cout << "end of loop " << finale << endl;
 			/*if(finale > 0 && base == finale) {cout << "Finale: " << finale << endl; break;}
 			memset(b, 0, BUFSIZE);
 			}*/
