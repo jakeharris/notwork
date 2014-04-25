@@ -258,12 +258,8 @@ bool isvpack(unsigned char * p) {
   Packet pk (0, db);
   pk.setSequenceNum(sn);
 
-  // change to validate based on checksum and sequence number
-
-  cout << "cs: " << cs << endl;
-  cout << "pk.generateCheckSum(): " << pk.generateCheckSum() << endl;
-
   if(!(sn >= base && sn < base + WIN_SIZE)) return false;
+  cout << "The issue appears to be checksum." << endl;
   if(cs != pk.generateCheckSum()) return false;
   return true;
 }
