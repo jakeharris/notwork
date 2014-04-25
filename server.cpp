@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
   
-  sendFile();
+  if(sendFile()) cout << "GET Testfile complete." << endl;
   
   return 0;
 }
