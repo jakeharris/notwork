@@ -295,7 +295,7 @@ bool getFile(){
       cout << "Received message: " << dataPull << endl;
 	  int pid = boost::lexical_cast<int>(sns);
       if(isvpack(packet)) {
-		cout << "Is valid packet." << endl;
+		cout << "Is valid packet. (sq.nm. " << pid << ", base " << base << ")" << endl;
 		if(pid == base) { 
 			cout << "Is required packet." << endl;
 			base++; //increment base of window
