@@ -267,8 +267,6 @@ bool sendFile() {
 	base = 0;
 	int finale = -1;
 	while(base * BUFSIZE < length) {
-		FD_ZERO(&stReadFDS);
-		FD_SET(0, &stReadFDS);
 		loadWindow();
 		
 		if(p.str()[0] == '\0') finale = p.getSequenceNum();
@@ -277,6 +275,8 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
+			FD_ZERO(&stReadFDS);
+			FD_SET(0, &stReadFDS);
 			cout << "begin loop no. " << x << endl;
 			int t = select(1, &stReadFDS, NULL, NULL, &stTimeOut);
 			if (t != 0) {
