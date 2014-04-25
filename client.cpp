@@ -35,7 +35,6 @@ void handleAck();
 void handleNak(int& x);
 
 int seqNum;
-int s;
 int probCorrupt;
 int probLoss;
 string hs;
@@ -51,6 +50,7 @@ string fstr;
 bool dropPck;
 Packet p;
 int delayT;
+int s;
 unsigned char b[BUFSIZE];
 
 int main(int argc, char** argv) {
