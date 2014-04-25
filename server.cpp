@@ -372,7 +372,7 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   }
   cout << "Seq. num: " << pack->getSequenceNum() << endl;
   cout << "Checksum: " << pack->getCheckSum() << endl;
-  cout << "Message: "  << pack->getDataBuffer() << endl;
+  //cout << "Message: "  << pack->getDataBuffer() << endl;
 
   return packStatus;
 }
