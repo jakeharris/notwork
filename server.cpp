@@ -33,6 +33,7 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb);
 Packet createPacket(int index);
 void loadWindow();
 bool sendPacket();
+bool getGet();
 
 int seqNum = 0;
 struct sockaddr_in a;
@@ -130,6 +131,7 @@ bool init(int argc, char** argv){
 bool getGet(){
 	unsigned char packet[PAKSIZE + 1];
 	rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
+	return (rlen > 0) ? true : false;
 }
 
 bool isvpack(unsigned char * p) {
