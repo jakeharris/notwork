@@ -117,7 +117,6 @@ bool init(int argc, char** argv){
   fstr = string(file);
   cout << "File: " << endl << fstr << endl;
 
-  seqNum = 0;
   base = 0;
   dropPck = false;
   calen = sizeof(ca);
@@ -347,13 +346,11 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   else if(r <= (delayProb)){
 	  packStatus[1] = true;
 	  cout << "Delayed!" << endl;
-	  seqNum++;
   }
   else if(r <= (corruptProb)){
     cout << "Corrupted!" << endl;
     pack->loadDataBuffer((char*)"GREMLIN LOL");
   }
-  else seqNum++; 
   cout << "Seq. num: " << pack->getSequenceNum() << endl;
   cout << "Checksum: " << pack->getCheckSum() << endl;
   cout << "Message: "  << pack->getDataBuffer() << endl;
