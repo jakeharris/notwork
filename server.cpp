@@ -16,7 +16,7 @@
 #define NAK 1
 #define BUFSIZE 505
 #define FILENAME "Testfile"
-#define TIMEOUT 100 //in ms
+#define TIMEOUT 15 //in ms
 #define WIN_SIZE 16
 
 using namespace std;
