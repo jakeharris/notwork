@@ -271,7 +271,7 @@ bool sendFile() {
 	int max_sd;
 	bool hasRead = false;
 	while(base * BUFSIZE < length) {
-		int finale = -1;
+		int finale = 0;
 		cout << "Time to load window!" << endl;
 		loadWindow();
 		
@@ -280,7 +280,7 @@ bool sendFile() {
 			p = window[x];
 			if(!sendPacket()) continue;
 		}
-		while(finale < 14) {
+		while(finale < WIN_SIZE) {
 			cout << endl << "beginning of loop " << finale << endl;
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
@@ -296,7 +296,7 @@ bool sendFile() {
 			}
 			if (t == 0) {
 				cout << "=== ACK TIMEOUT (select)" << endl;
-				if (finale == 13) break;
+
 
 			} 
 			desc_ready = t;
@@ -304,13 +304,14 @@ bool sendFile() {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
 				} else hasRead = true;
+				cout << "hasRead" << endl;
 				if(!hasRead) continue;
 				if(isAck()) {
 					cout << "if isAck()" << endl;
 					handleAck();
 					finale++;
 					cout << "Finale is: " << finale << endl;
-					if (finale == 14) break;
+					if (finale == WIN_SIZE - 1) break;
 				} else { 
 					cout << "Not an ACK!" << endl; 
 				}
