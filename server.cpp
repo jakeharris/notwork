@@ -236,12 +236,12 @@ bool loadFile() {
 void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i-base] = createPacket(i);
-		if(strlen(window[i-base].getDataBuffer()) < BUFSIZE - 1) { 
+		/*if(strlen(window[i-base].getDataBuffer()) < BUFSIZE - 1) { 
 			for(++i; i < base + WIN_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}
 			break;
-		}
+		}*/
 	}
 }
 
@@ -273,6 +273,11 @@ bool sendFile() {
 
 			memset(b, 0, BUFSIZE);
 		}
+	}
+
+	if(sendto(s, "\0", BUFSIZE, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
+		cout << "Final package sending failed. (socket s, server address sa, message m)" << endl;
+		return false;
 	}
 	return true;
 }
