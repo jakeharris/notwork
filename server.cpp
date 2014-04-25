@@ -242,7 +242,7 @@ bool loadFile() {
 }
 
 void loadWindow(){
-	for(int i = base; i <= WIN_SIZE; i++) {
+	for(int i = base; i < WIN_SIZE; i++) {
 		window[i] = createPacket(i);
 	}
 }
