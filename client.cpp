@@ -305,7 +305,7 @@ bool getFile(){
       if(isvpack(packet)) {
         ack = ACK;
         seqNum++;
-		windowBase++; //increment base of window
+		windowBase++; //increment base of window //FIXME
         file << dataPull;
 		file.flush();
       } else { 
@@ -313,13 +313,13 @@ bool getFile(){
       }
       cout << "Sent response: ";
       cout << ((ack == ACK) ? "ACK" : "NAK") << endl;
-      Packet p (seqNum++, reinterpret_cast<const char *>(dataPull));
-      p.setCheckSum(boost::lexical_cast<int>(css));
-      p.setAckNack(ack);
+      Packet pk (seqNum++, reinterpret_cast<const char *>(dataPull));
+      pk.setCheckSum(boost::lexical_cast<int>(css));
+      pk.setAckNack(ack);
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 
-      if(sendto(s, p.str(), PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
+      if(sendto(s, pk.str(), PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
         return 0;
       }

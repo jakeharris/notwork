@@ -255,7 +255,6 @@ bool sendFile() {
 
 	for(int x = 0; x < WIN_SIZE; x++) {
 		p = window[x];
-		cout << "Packet data: " << endl << p.str() << endl;
 		if(!sendPacket()) continue;
 	}
 	for(int x = 0; x < WIN_SIZE; x++) {
@@ -286,6 +285,7 @@ Packet createPacket(int index){
 }
 
 bool sendPacket(){
+	cout << endl;
     cout << "=== TRANSMISSION START" << endl;
     int pc = probCorrupt; int pl = probLoss; int pd = probDelay;
 	bool* pckStatus = gremlin(&p, pc, pl, pd);
