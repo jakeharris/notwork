@@ -297,11 +297,11 @@ bool getFile(){
     packet[PAKSIZE] = '\0';
     if (rlen > 0) {
 	  char * sns = new char[3];
-	  memcpy(sns, &packet[0], 2);
+	  memcpy(sns, &packet[0], 3);
 	  sns[2] = '\0';
 		
       char * css = new char[6];
-      memcpy(css, &packet[1], 5);
+      memcpy(css, &packet[2], 5);
       css[5] = '\0';
       cout << endl << endl << "=== RECEIPT" << endl;
       cout << "Seq. num: " << packet[0] << endl;
