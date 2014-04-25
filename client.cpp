@@ -300,14 +300,14 @@ bool getFile(){
       cout << "Seq. num: " << sns << endl;
       cout << "Checksum: " << css << endl;
       cout << "Received message: " << dataPull << endl;
+	  int pid = boost::lexical_cast<int>(sns);
       if(isvpack(packet)) {
-        int x = boost::lexical_cast<int>(sns);
-		if(x == base) { 
+		if(pid == base) { 
 			base++; //increment base of window
 			file << dataPull;
 			file.flush();
 		}
-      } else cout << "%%% ERROR IN PACKET " << x << "%%%" << endl;
+      } else cout << "%%% ERROR IN PACKET " << pid << "%%%" << endl;
 
       cout << "Sent response: ";
       cout << "ACK " << base << endl;

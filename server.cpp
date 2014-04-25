@@ -307,7 +307,7 @@ void handleAck() {
 	int ack = boost::lexical_cast<int>(b);
 	if(base < ack) base = ack;
 }
-void handleNak(int& index) {
+void handleNak(int& x) {
 
       char * sns = new char[2];
       memcpy(sns, &b[0], 1);
@@ -327,8 +327,8 @@ void handleNak(int& index) {
       pk.setSequenceNum(boost::lexical_cast<int>(sns));
       pk.setCheckSum(boost::lexical_cast<int>(css));
 
-      if(!pk.chksm()) index--; 
-      else index = (index - 2 > 0) ? index - 2 : 0;
+      if(!pk.chksm()) x--; 
+      else x = (x - 2 > 0) ? x - 2 : 0;
 }
 bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
 
