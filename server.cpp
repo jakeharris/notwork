@@ -19,7 +19,7 @@
 #define NAK 1
 #define BUFSIZE 505
 #define FILENAME "Testfile"
-#define TIMEOUT 150 //in ms
+#define TIMEOUT 15 //in ms
 #define WIN_SIZE 16
 
 using namespace std;
@@ -281,8 +281,6 @@ bool sendFile() {
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
 			FD_SET(s, &stReadFDS);
 
-
-			cout << "begin loop no. " << x << endl;
 			int t = select(-1, &stReadFDS, NULL, NULL, &stTimeOut);
 			if (t != 0) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
