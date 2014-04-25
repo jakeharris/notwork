@@ -335,7 +335,6 @@ bool getFile(){
       }
 	  delete sns;
       delete css;
-	  delete wbs;
 	  delete ackval;
     }
   }
