@@ -316,7 +316,7 @@ bool getFile(){
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 
-	  string s = tostring(windowBase);
+	  string s = to_string(windowBase);
 	  const char * ackval = s.c_str();
 
       if(sendto(s, *windowBase, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
