@@ -291,8 +291,7 @@ bool sendFile() {
 			}
 			if (t == 0) {
 				cout << "=== ACK TIMEOUT (select)" << endl;
-
-
+				break;
 			} 
 			desc_ready = t;
 			for(int u = 0; u <= max_sd &&  desc_ready > 0; u++){
