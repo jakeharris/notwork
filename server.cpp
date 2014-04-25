@@ -271,6 +271,7 @@ bool sendFile() {
 	int max_sd;
 	bool hasRead = false;
 	while(base * BUFSIZE < length) {
+		cout << "Time to load window!" << endl;
 		loadWindow();
 		
 		if(p.str()[0] == '\0') finale = p.getSequenceNum();
