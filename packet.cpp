@@ -53,6 +53,9 @@
 	if(sns.length() < 2) sns.insert(0, 1, '0');
 
     packetString = sns + csStr + std::to_string((long long int)ackNack) + tempStr;
+
+	std::cout << "packetString: " << packetString << std::endl;
+
     strcpy(packet, packetString.c_str());
     return packet;
   }
