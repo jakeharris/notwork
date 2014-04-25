@@ -8,11 +8,6 @@
 #include <fstream>
 #include <boost/lexical_cast.hpp>
 #include "packet.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <sys/types.h>
-
 
 #define USAGE "Usage:\r\nc \r\n[tux machine number] \r\n[probability of packet corruption in int form] \r\n[probability of packet loss in int form] \r\n[probability of packet delay] \r\n[length of delay in ms] \r\n"
 #define PORT 10038
@@ -39,7 +34,6 @@ Packet createPacket(int index);
 void loadWindow();
 bool sendPacket();
 bool getGet();
-
 
 struct sockaddr_in a;
 struct sockaddr_in ca;
@@ -265,7 +259,7 @@ bool sendFile() {
 	FD_ZERO(&stReadFDS);
 	stTimeOut.tv_sec = 0;
 	stTimeOut.tv_usec = 1000 * TIMEOUT;
-	FD_SET(0, &stReadFDS);
+	FD_SET(s, &stReadFDS);
 
 	base = 0;
 	int finale = -1;
@@ -279,7 +273,7 @@ bool sendFile() {
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
 			cout << "begin loop no. " << x << endl;
-			int t = select(-1, &stReadFDS, NULL, NULL, &stTimeOut);
+			int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
 			if (t != 0) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT" << endl;
