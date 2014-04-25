@@ -272,6 +272,12 @@ bool sendFile() {
 
 Packet createPacket(int index){
     cout << endl;
+	cout << "=== PACKET CREATION TESTING" << endl;
+	cout << "index: " << index << endl;
+	cout << "BUFSIZE: " << BUFSIZE << endl;
+	cout << "file index (index * BUFSIZE): " << index * BUFSIZE << endl;
+	cout << "file length: " << length << endl;
+
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
 	if(mstr.length() < BUFSIZE) {
       mstr[length - (index * BUFSIZE)] = '\0';
