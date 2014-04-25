@@ -51,7 +51,7 @@
 	std::cout << "changed" << std::endl;
 	if(sns.length() < 2) sns.insert(0, 1, '0');
 
-    packetString = std::to_string((long long int)sequenceNum) + csStr + std::to_string((long long int)ackNack) + tempStr;
+    packetString = sns + csStr + std::to_string((long long int)ackNack) + tempStr;
     strcpy(packet, packetString.c_str());
     return packet;
   }
