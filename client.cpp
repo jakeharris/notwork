@@ -296,6 +296,10 @@ bool getFile(){
     dataPull[PAKSIZE - 7] = '\0';
     packet[PAKSIZE] = '\0';
     if (rlen > 0) {
+	  char * sns = new char[3];
+	  memcpy(sns, &packet[0], 2);
+	  sns[2] = '\0';
+		
       char * css = new char[6];
       memcpy(css, &packet[1], 5);
       css[5] = '\0';
@@ -305,7 +309,7 @@ bool getFile(){
       cout << "Received message: " << dataPull << endl;
       if(isvpack(packet)) {
         
-		if(boost::lexical_cast<int>(packet[0]) == windowBase) windowBase++; //increment base of window //FIXME
+		if(boost::lexical_cast<int>(sns) == windowBase) windowBase++; //increment base of window //FIXME
         file << dataPull;
 		file.flush();
       }
