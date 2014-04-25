@@ -44,6 +44,8 @@
     std::string csStr;
 	std::string sns;
 
+	if (tempStr[0] == '\0') return "\0";
+
     csStr = std::to_string((long long int)checkSum);
     while(csStr.length() < 5) csStr += '0';
 
