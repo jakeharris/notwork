@@ -297,6 +297,7 @@ Packet createPacket(int index){
 bool sendPacket(){
 	cout << endl;
     cout << "=== TRANSMISSION START" << endl;
+	cout << "Sequence number before gremlin function: " << p.getSequenceNum() << endl;
     int pc = probCorrupt; int pl = probLoss; int pd = probDelay;
 	bool* pckStatus = gremlin(&p, pc, pl, pd);
 
