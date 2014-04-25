@@ -275,13 +275,12 @@ bool getFile(){
   
   for (;;) {
     unsigned char packet[PAKSIZE + 1];
-    unsigned char dataPull[BUFSIZE + 1];
+    unsigned char dataPull[BUFSIZE];
     rlen = recvfrom(s, packet, PAKSIZE + 1, 0, (struct sockaddr *)&sa, &salen);
 
-	for(int x = 0; x < BUFSIZE + 1; x++) {
+	for(int x = 0; x < BUFSIZE; x++) {
       dataPull[x] = packet[x + 8];
     }
-    dataPull[BUFSIZE + 1] = '\0';
     if (rlen > 0) {
 	  char * sns = new char[3];
 	  memcpy(sns, &packet[0], 3);
