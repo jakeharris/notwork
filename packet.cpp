@@ -38,27 +38,20 @@
   }
   //Attach header to the data array
   char* Packet::str(){
-	std::cout << "sequenceNum in packet.str(): " << sequenceNum << std::endl;
     std::string tempStr(dataBuff);
     std::string packetString;
     std::string csStr;
 	std::string sns;
 	
-	std::cout << "sequenceNum in packet.str(): " << sequenceNum << std::endl;
 	if (tempStr[0] == '\0') return "\0";
 	
-	std::cout << "sequenceNum in packet.str(): " << sequenceNum << std::endl;
     csStr = std::to_string((long long int)checkSum);
     while(csStr.length() < 5) csStr += '0';
-
-	std::cout << "sequenceNum in packet.str(): " << sequenceNum << std::endl;
 
 	sns = std::to_string((long long int)sequenceNum);
 	if(sns.length() < 2) sns.insert(0, 1, '0');
 
     packetString = sns + csStr + std::to_string((long long int)ackNack) + tempStr;
-
-	std::cout << "packetString: " << packetString << std::endl;
 
     strcpy(packet, packetString.c_str());
     return packet;
