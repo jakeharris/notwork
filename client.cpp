@@ -1,12 +1,12 @@
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <string.h>
+#include <string>
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
-#include <stdlib.h>
 #include "packet.h"
 
 #define BUFSIZE 121
@@ -316,10 +316,10 @@ bool getFile(){
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 
-	  string s = to_string(windowBase);
+	  string s = to_string((long long)windowBase);
 	  const char * ackval = s.c_str();
 
-      if(sendto(s, *windowBase, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
+      if(sendto(s, ackval, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
         return 0;
       }
