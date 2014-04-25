@@ -284,7 +284,7 @@ Packet createPacket(int index){
 	cout << "file index (index * BUFSIZE): " << index * BUFSIZE << endl;
 	cout << "file length: " << length << endl;
 	
-    string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
+    string mstr = fstr.substr(index * BUFSIZE, BUFSIZE + 1);
 	cout << "mstr: " << mstr << endl;
 
 	if(mstr.length() < BUFSIZE) {
