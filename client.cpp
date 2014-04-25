@@ -9,11 +9,11 @@
 #include <boost/lexical_cast.hpp>
 #include "packet.h"
 
-#define BUFSIZE 121
+#define BUFSIZE 122
 #define FILENAME "Testfile"
 #define TEST_FILENAME "Testfile2"
 #define PORT 10038
-#define PAKSIZE 128
+#define PAKSIZE 129
 #define ACK 0
 #define NAK 1
 #define WIN_SIZE 16
@@ -243,9 +243,9 @@ bool isvpack(unsigned char * p) {
   memcpy(css, &p[2], 5);
   css[5] = '\0';
       
-  char * db = new char[122 + 1];
-  memcpy(db, &p[8], 122);
-  db[122] = '\0';
+  char * db = new char[BUFSIZE + 1];
+  memcpy(db, &p[8], BUFSIZE);
+  db[BUFSIZE] = '\0';
 
   cout << "Seq. num: " << sns << endl;
   cout << "Checksum: " << css << endl;
