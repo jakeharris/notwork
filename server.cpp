@@ -296,7 +296,7 @@ bool sendFile() {
 				handleAck();
 				//handleNak(x);
 			}
-			if(finale > 0 && base == finale) break;
+			if(finale > 0 && base == finale) {cout << "Finale: " << finale << endl; break;}
 			memset(b, 0, BUFSIZE);
 		}
 		
