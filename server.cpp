@@ -278,7 +278,7 @@ bool sendFile() {
 			p = window[x];
 			if(!sendPacket()) continue;
 		}
-		for(int x = 0; x < WIN_SIZE; x++) {
+		while(finale < 15) {
 			cout << endl << "beginning of loop " << x << endl;
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
@@ -305,18 +305,17 @@ bool sendFile() {
 				if(isAck()) {
 					cout << "if isAck()" << endl;
 					handleAck();
+					finale++;
 				} else { 
-					cout << "if !isAck()" << endl; 
-					handleAck();
-					//handleNak(x);
+					cout << "Not an ACK!" << endl; 
 				}
 			}
 			cout << "end of loop " << x << endl;
-			if(finale > 0 && base == finale) {cout << "Finale: " << finale << endl; break;}
+			/*if(finale > 0 && base == finale) {cout << "Finale: " << finale << endl; break;}
 			memset(b, 0, BUFSIZE);
-		}
+			}*/
 		
-	}
+		}
 
 	if(sendto(s, "\0", BUFSIZE, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Final package sending failed. (socket s, server address sa, message m)" << endl;
