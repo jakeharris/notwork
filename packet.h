@@ -25,7 +25,7 @@ class Packet{
     int generateCheckSum();
     void loadDataBuffer(char* data);
     char* getDataBuffer();
-    Packet(int sn, const char db[122]);
+    Packet(int sn, const char db[505]);
     Packet(); //constructor
     char* str();
 };

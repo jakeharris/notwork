@@ -13,9 +13,9 @@
   }
   Packet::Packet (int sn, const char db[505]){
     sequenceNum = sn % 32;
-    strcpy(dataBuff, db);
     checkSum = generateCheckSum();
     ackNack =0;
+    strcpy(dataBuff, db);
   }
   //Setter Methods
   void Packet::setSequenceNum(int sn){
