@@ -276,6 +276,8 @@ bool sendFile() {
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
 			FD_ZERO(&stReadFDS);
+			stTimeOut.tv_sec = 1;
+			stTimeOut.tv_usec = 1000 * TIMEOUT;
 			FD_SET(0, &stReadFDS);
 			cout << "begin loop no. " << x << endl;
 			int t = select(1, &stReadFDS, NULL, NULL, &stTimeOut);
