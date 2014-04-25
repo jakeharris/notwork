@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #include <iostream>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
@@ -291,11 +294,9 @@ bool sendFile() {
 				handleAck();
 				//handleNak(x);
 			}
-			cout << "complete loop no. " << x << endl;
 			if(finale > 0 && base == finale) break;
 			memset(b, 0, BUFSIZE);
 		}
-		cout << "are we making out of this thing?" << endl;
 		
 	}
 
