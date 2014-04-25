@@ -241,7 +241,7 @@ void loadWindow(){
 			for(++i; i < base + WIN_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}
-			return;
+			
 		}
 		/*cout << "window[i-base] seq. num: " << window[i-base].getSequenceNum() << endl;*/
 	}
