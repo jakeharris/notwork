@@ -278,11 +278,11 @@ bool sendFile() {
 		for(int x = 0; x < WIN_SIZE; x++) {
 			cout << endl << "beginning of loop " << x << endl;
 			FD_ZERO(&stReadFDS);
-			stTimeOut.tv_sec = 0;
+			stTimeOut.tv_sec = 1;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
 			FD_SET(s, &stReadFDS);
 			cout << endl << "before select" << endl;
-			int t = select(0, &stReadFDS, NULL, NULL, &stTimeOut);
+			int t = select(1, &stReadFDS, NULL, NULL, &stTimeOut);
 			if (t == -1){
 				perror("select()");
 			}
