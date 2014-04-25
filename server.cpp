@@ -236,14 +236,14 @@ bool loadFile() {
 void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i-base] = createPacket(i);
-		if(strlen(window[i-base].getDataBuffer()) < BUFSIZE && window[i-base].chksm()) { 
-			cout << "In loadWindow's secret base, index is: " << i-base << endl;
+		/*if(strlen(window[i-base].getDataBuffer()) < BUFSIZE && window[i-base].chksm()) { 
+			cout << "In loadWindow's secret base, index is: " << i-base << endl;*/
 			/*for(++i; i < base + WIN_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}*/
-			return;
-		}
-		cout << "window[i-base] seq. num: " << window[i-base].getSequenceNum() << endl;
+			/*return;
+		}*/
+		/*cout << "window[i-base] seq. num: " << window[i-base].getSequenceNum() << endl;*/
 	}
 	
 		/*cout << "packet " << base + 1 << ": " << window[1].str() << endl;
@@ -254,15 +254,15 @@ bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
 	base = 0;
+	int finale = -1;
 	while(base * BUFSIZE < length) {
 		loadWindow();
-
-
+		
+		if(p.str()[0] == '\0') finale = p.getSequenceNum();
 		for(int x = 0; x < WIN_SIZE; x++) {
 			p = window[x];
 			if(!sendPacket()) continue;
 		}
-		if(p.str()[0] == '\0') break;
 		for(int x = 0; x < WIN_SIZE; x++) {
 			if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 				cout << "=== ACK TIMEOUT" << endl;
@@ -276,9 +276,11 @@ bool sendFile() {
 				handleAck();
 				//handleNak(x);
 			}
-
+			
+			if(finale > 0 && base == finale) break;
 			memset(b, 0, BUFSIZE);
 		}
+		
 	}
 
 	if(sendto(s, "\0", BUFSIZE, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
