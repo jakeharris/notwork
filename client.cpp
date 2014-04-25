@@ -283,18 +283,6 @@ bool getFile(){
     unsigned char dataPull[PAKSIZE - 7 + 1];
     rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&sa, &salen);
 
-	/* Begin Window Loading */
-	int tempSeqNum = boost::lexical_cast<int>(packet[0]);
-	int properIndex = tempSeqNum - base;
-
-	window[properIndex] = packet;
-	cout << "Packet loaded into window" << endl;
-	char* tempTest = new char[6];
-		memcpy(tempTest, &window[1], 0);
-		tempTest[5] = '\0';
-	
-	cout << "The Checksum pulled from client window: " << tempTest[0] << endl; 
-
 	for(int x = 0; x < PAKSIZE - 8; x++) {
       dataPull[x] = packet[x + 8];
     }
@@ -314,12 +302,13 @@ bool getFile(){
       cout << "Received message: " << dataPull << endl;
       if(isvpack(packet)) {
         int x = boost::lexical_cast<int>(sns);
-		cout << "sns: " << sns << endl;
-		cout << "x (sns as int): " << x << endl;
-		if(x == base) base++; //increment base of window //FIXME
-        file << dataPull;
-		file.flush();
-      }
+		if(x == base) { 
+			base++; //increment base of window
+			file << dataPull;
+			file.flush();
+		}
+      } else cout << "%%% ERROR IN PACKET " << x << "%%%" << endl;
+
       cout << "Sent response: ";
       cout << "ACK " << base << endl;
 
@@ -327,9 +316,6 @@ bool getFile(){
 
 	  string wbs = to_string((long long)base);
 	  const char * ackval = wbs.c_str();
-	  cout << "wbs: " << wbs << endl;
-	  cout << "ackval: " << ackval << endl;
-	  cout << "s: " << s << endl;
 
       if(sendto(s, ackval, 5, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
