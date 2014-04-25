@@ -286,6 +286,7 @@ Packet createPacket(int index){
     cout << endl;
 	cout << "=== PACKET CREATION TESTING" << endl;
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
+	cout << "index: " << index << endl;
 	cout << "mstr: " << mstr << endl;
 
 	if(mstr.length() < BUFSIZE) {
