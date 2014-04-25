@@ -304,15 +304,13 @@ bool getFile(){
       cout << "Checksum: " << css << endl;
       cout << "Received message: " << dataPull << endl;
       if(isvpack(packet)) {
-        ack = ACK;
+        
 		if(boost::lexical_cast<int>(packet[0]) == windowBase) windowBase++; //increment base of window //FIXME
         file << dataPull;
 		file.flush();
-      } else { 
-        ack = NAK;
       }
       cout << "Sent response: ";
-      cout << ((ack == ACK) ? "ACK " : "NAK ") << windowBase << endl;
+      cout << "ACK " << windowBase << endl;
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 

@@ -242,7 +242,7 @@ bool loadFile() {
 }
 
 void loadWindow(){
-	for(int i = base; i < WIN_SIZE; i++) {
+	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i] = createPacket(i);
 	}
 }
@@ -250,7 +250,7 @@ void loadWindow(){
 bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
-
+	base = 0;
 	loadWindow();
 
 	for(int x = 0; x < WIN_SIZE; x++) {
@@ -267,7 +267,8 @@ bool sendFile() {
 		if(isAck()) { 
 			handleAck();
 		} else { 
-			handleNak(x);
+			handleAck();
+			//handleNak(x);
 		}
 
 		memset(b, 0, BUFSIZE);
@@ -281,7 +282,7 @@ Packet createPacket(int index){
 	if(mstr.length() < BUFSIZE) {
       mstr[length - (index * BUFSIZE)] = '\0';
     }
-    return Packet (seqNum, mstr.c_str());
+    return Packet (base + index, mstr.c_str());
 }
 
 bool sendPacket(){
@@ -309,7 +310,8 @@ bool isAck() {
     else return false;
 }
 void handleAck() {
-
+	int ack = boost::lexical_cast<int>(b);
+	if(base < ack) base = ack;
 }
 void handleNak(int& x) {
 
