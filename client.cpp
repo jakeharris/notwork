@@ -253,9 +253,6 @@ bool isvpack(unsigned char * p) {
   Packet pk (0, db);
   pk.setSequenceNum(sn);
 
-  cout << "cs: " << cs << endl;
-  cout << "pk.generateCheckSum(): " << pk.generateCheckSum() << endl;
-
 
 
   if(!(sn >= (base % 32) && sn <= (base % 32) + WIN_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
@@ -296,9 +293,7 @@ bool getFile(){
       cout << "Received message: " << dataPull << endl;
 	  int pid = boost::lexical_cast<int>(sns);
       if(isvpack(packet)) {
-		cout << "Is valid packet. (sq.nm. " << pid << ", base " << base << ")" << endl;
 		if(pid == base % 32) { 
-			cout << "Is required packet." << endl;
 			base++; //increment base of window
 			file << dataPull;
 			file.flush();
