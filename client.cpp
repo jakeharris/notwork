@@ -278,6 +278,8 @@ bool getFile(){
     unsigned char dataPull[BUFSIZE + 2];
     rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&sa, &salen);
 
+	cout << "packet: " << packet << endl;
+
 	for(int x = 0; x < BUFSIZE + 2; x++) {
       dataPull[x] = packet[x + 8];
     }
