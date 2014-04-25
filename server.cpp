@@ -302,9 +302,11 @@ bool sendFile() {
 					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
 				} else hasRead = true;
 				if(!hasRead) continue;
-				if(isAck()) { 
+				if(isAck()) {
+					cout << "if isAck()" << endl;
 					handleAck();
 				} else { 
+					cout << "if !isAck()" << endl; 
 					handleAck();
 					//handleNak(x);
 				}
