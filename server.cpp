@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #include <iostream>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
@@ -60,7 +63,7 @@ int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
   
-  sendFile();
+  if(sendFile()) cout << "GET Testfile complete." << endl;
   
   return 0;
 }
@@ -259,10 +262,11 @@ bool sendFile() {
 	FD_ZERO(&stReadFDS);
 	stTimeOut.tv_sec = 0;
 	stTimeOut.tv_usec = 1000 * TIMEOUT;
-	FD_SET(s, &stReadFDS);
+	FD_SET(0, &stReadFDS);
 
 	base = 0;
 	int finale = -1;
+	bool hasRead = false;
 	while(base * BUFSIZE < length) {
 		loadWindow();
 		
@@ -272,30 +276,34 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
-			cout << "begin loop no. " << x << endl;
-			int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
-			if (t != 0) {
-				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
-					cout << "=== ACK TIMEOUT" << endl;
-					x--;
-					continue;
-				}
-			} else {
-				cout << "=== ACK TIMEOUT" << endl;
-				x--;
-				continue;
+			cout << endl << "beginning of loop " << x << endl;
+			FD_ZERO(&stReadFDS);
+			stTimeOut.tv_sec = 0;
+			stTimeOut.tv_usec = 1000 * TIMEOUT;
+			FD_SET(0, &stReadFDS);
+			cout << endl << "before select" << endl;
+			int t = select(1, &stReadFDS, NULL, NULL, &stTimeOut);
+			if (t == -1){
+				perror("select()");
 			}
+			else if (t) {
+				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
+					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
+				} else hasRead = true;
+			} else {
+				cout << "=== ACK TIMEOUT (select)" << endl;
+			}
+			if(!hasRead) continue;
 			if(isAck()) { 
 				handleAck();
 			} else { 
 				handleAck();
 				//handleNak(x);
 			}
-			cout << "complete loop no. " << x << endl;
-			if(finale > 0 && base == finale) break;
+			cout << "end of loop " << x << endl;
+			if(finale > 0 && base == finale) {cout << "Finale: " << finale << endl; break;}
 			memset(b, 0, BUFSIZE);
 		}
-		cout << "are we making out of this thing?" << endl;
 		
 	}
 
