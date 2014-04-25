@@ -291,6 +291,8 @@ Packet createPacket(int index){
 		cout << "Null terminated mstr." << endl;
 		mstr[length - (index * BUFSIZE)] = '\0';
     }
+
+	cout << "index: " << index << endl;
     return Packet (index, mstr.c_str());
 }
 
