@@ -286,7 +286,7 @@ Packet createPacket(int index){
 	
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
 	cout << "mstr: " << mstr << endl;
-    string mstr = fstr.substr(index * BUFSIZE, BUFSIZE + 2);
+    mstr = fstr.substr(index * BUFSIZE, BUFSIZE + 2);
 	cout << "mstr + 2: " << mstr << endl;
 	if(mstr.length() < BUFSIZE) {
       mstr[length - (index * BUFSIZE)] = '\0';
