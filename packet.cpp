@@ -48,8 +48,8 @@
     while(csStr.length() < 5) csStr += '0';
 
 	sns = std::to_string((long long int)sequenceNum);
-	std::cout << "changed" << std::endl;
-	if(sns.length() < 2) sns.insert(0, 1, '0');
+	std::cout << "sns length: " << sns.length() << std::endl;
+	if(sns.length() < 2) sns = '0' + sns;
 
     packetString = sns + csStr + std::to_string((long long int)ackNack) + tempStr;
     strcpy(packet, packetString.c_str());
