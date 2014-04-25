@@ -234,7 +234,6 @@ bool gremlin(Packet * pack, int corruptProb, int lossProb){
 }
 
 bool isvpack(unsigned char * p) {
-  cout << endl << "=== IS VALID PACKET TESTING" << endl;
 
   char * sns = new char[3];
   memcpy(sns, &p[0], 3);
@@ -247,10 +246,6 @@ bool isvpack(unsigned char * p) {
   char * db = new char[BUFSIZE + 1];
   memcpy(db, &p[8], BUFSIZE);
   db[BUFSIZE] = '\0';
-
-  cout << "Seq. num: " << sns << endl;
-  cout << "Checksum: " << css << endl;
-  cout << "Message: " << db << endl;
 
   int sn = boost::lexical_cast<int>(sns);
   int cs = boost::lexical_cast<int>(css);
