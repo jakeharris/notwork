@@ -304,7 +304,7 @@ bool getFile(){
       memcpy(css, &packet[2], 5);
       css[5] = '\0';
       cout << endl << endl << "=== RECEIPT" << endl;
-      cout << "Seq. num: " << packet[0] << endl;
+      cout << "Seq. num: " << sns << endl;
       cout << "Checksum: " << css << endl;
       cout << "Received message: " << dataPull << endl;
       if(isvpack(packet)) {
