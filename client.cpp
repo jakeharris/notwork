@@ -254,8 +254,7 @@ bool isvpack(unsigned char * p) {
   pk.setSequenceNum(sn);
 
   cout << "base: " << base << endl;
-  cout << "sn: " << sn << endl;
-  cout << "base + WIN_SIZE: " << base + WIN_SIZE << endl;
+  cout << "(bottom, sn, top): " << base % 32 << ", " << sn << ", " << (base % 32) + WIN_SIZE << endl;
 
   if(!(sn >= (base % 32) && sn <= (base % 32) + WIN_SIZE)) return false;
   if(cs != pk.generateCheckSum()) return false;
