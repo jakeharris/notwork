@@ -49,7 +49,7 @@
     csStr = std::to_string((long long int)checkSum);
     while(csStr.length() < 5) csStr += '0';
 
-	cout << "sequenceNum in packet.str(): " << sequenceNum << endl;
+	std::cout << "sequenceNum in packet.str(): " << sequenceNum << std::endl;
 
 	sns = std::to_string((long long int)sequenceNum);
 	if(sns.length() < 2) sns.insert(0, 1, '0');
