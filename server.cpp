@@ -278,9 +278,11 @@ bool sendFile() {
 
 Packet createPacket(int index){
     cout << endl;
-    cout << "=== TRANSMISSION START" << endl;
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
-
+	cout << "=== PACKET CREATION START" << endl;
+	cout << "Current index: " << index << endl;
+	cout << "Packet string: " << mstr << endl;
+	cout << "Packet string length: " << mstr.length() << endl;
 	if(mstr.length() < BUFSIZE) {
       mstr[length - (index * BUFSIZE)] = '\0';
     }
@@ -288,6 +290,7 @@ Packet createPacket(int index){
 }
 
 bool sendPacket(){
+    cout << "=== TRANSMISSION START" << endl;
     int pc = probCorrupt; int pl = probLoss; int pd = probDelay;
 	bool* pckStatus = gremlin(&p, pc, pl, pd);
 
