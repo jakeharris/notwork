@@ -252,13 +252,13 @@ bool sendFile() {
 		requires additional code later to sendFile again with updated window*/
 
 	loadWindow();
-	cout << "Test" << endl;
-	for(int x = 0; x <= WIN_SIZE; x++) {
+
+	for(int x = 0; x < WIN_SIZE; x++) {
 		p = window[x];
 		cout << "Packet data: " << endl << p.str() << endl;
 		if(!sendPacket()) continue;
 	}
-	for(int x = 0; x <= WIN_SIZE; x++) {
+	for(int x = 0; x < WIN_SIZE; x++) {
 		if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 			cout << "=== ACK TIMEOUT" << endl;
 			x--;
@@ -279,10 +279,6 @@ bool sendFile() {
 Packet createPacket(int index){
     cout << endl;
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
-	cout << "=== PACKET CREATION START" << endl;
-	cout << "Current index: " << index << endl;
-	cout << "Packet string: " << mstr << endl;
-	cout << "Packet string length: " << mstr.length() << endl;
 	if(mstr.length() < BUFSIZE) {
       mstr[length - (index * BUFSIZE)] = '\0';
     }
