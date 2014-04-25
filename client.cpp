@@ -3,10 +3,10 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
+#include <stdlib.h>
 #include "packet.h"
 
 #define BUFSIZE 121
