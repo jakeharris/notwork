@@ -11,10 +11,10 @@
 
 #define USAGE "Usage:\r\nc \r\n[tux machine number] \r\n[probability of packet corruption in int form] \r\n[probability of packet loss in int form] \r\n[probability of packet delay] \r\n[length of delay in ms] \r\n"
 #define PORT 10038
-#define PAKSIZE 128
+#define PAKSIZE 129
 #define ACK 0
 #define NAK 1
-#define BUFSIZE 121
+#define BUFSIZE 122
 #define FILENAME "Testfile"
 #define TIMEOUT 100 //in ms
 #define WIN_SIZE 16
