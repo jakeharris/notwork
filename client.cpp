@@ -335,7 +335,6 @@ bool getFile(){
       }
 	  delete sns;
       delete css;
-	  delete ackval;
     }
   }
   file.close();
