@@ -312,11 +312,11 @@ bool getFile(){
         ack = NAK;
       }
       cout << "Sent response: ";
-      cout << ((ack == ACK) ? "ACK" : "NAK") << endl;
+      cout << ((ack == ACK) ? "ACK " : "NAK ") << windowBase << endl;
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 
-      if(sendto(s, (const void*)windowBase, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
+      if(sendto(s, windowBase, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
         return 0;
       }
