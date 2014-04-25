@@ -42,11 +42,12 @@
     std::string tempStr(dataBuff);
     std::string packetString;
     std::string csStr;
+	std::string sns;
 
     csStr = std::to_string((long long int)checkSum);
     while(csStr.length() < 5) csStr += '0';
 
-	std::string sns (std::to_string((long long int)sequenceNum));
+	sns = std::to_string((long long int)sequenceNum);
 	if(sns.length() < 2) sns.insert(0, 1, '0');
 
     packetString = std::to_string((long long int)sequenceNum) + csStr + std::to_string((long long int)ackNack) + tempStr;
