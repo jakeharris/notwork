@@ -275,7 +275,7 @@ bool sendFile() {
 			p = window[x];
 			if(!sendPacket()) continue;
 		}
-		for(int x = 0; x < WIN_SIZE; x++) {
+		for(int x = 0; x < WIN_SIZE - 1; x++) {
 			cout << endl << "beginning of loop " << x << endl;
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
