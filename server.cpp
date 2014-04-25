@@ -252,7 +252,7 @@ bool sendFile() {
 		requires additional code later to sendFile again with updated window*/
 
 	loadWindow();
-
+	cout << "Test" << endl;
 	for(int x = 0; x <= WIN_SIZE; x++) {
 		p = window[x];
 		cout << "Packet data: " << endl << p.str() << endl;
