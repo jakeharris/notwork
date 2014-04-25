@@ -238,7 +238,6 @@ void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i-base] = createPacket(i);
 		if(strlen(window[i-base].getDataBuffer()) < BUFSIZE && window[i-base].chksm()) { 
-			cout << "In loadWindow's secret base, index is: " << i-base << endl;
 			for(++i; i < base + WIN_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}
@@ -291,6 +290,7 @@ bool sendFile() {
 			}
 			if (t == 0) {
 				cout << "=== ACK TIMEOUT (select)" << endl;
+				cout << "Timed out packet: " << base << endl;
 				break;
 			} 
 			desc_ready = t;
