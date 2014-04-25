@@ -327,18 +327,15 @@ Packet createPacket(int index){
     string mstr = fstr.substr(index * BUFSIZE, BUFSIZE);
 
 	if(mstr.length() < BUFSIZE) {
-		cout << "Null terminated mstr." << endl;
 		mstr[length - (index * BUFSIZE)] = '\0';
     }
 
-	cout << "index: " << index << endl;
     return Packet (index, mstr.c_str());
 }
 
 bool sendPacket(){
 	cout << endl;
     cout << "=== TRANSMISSION START" << endl;
-	cout << "Sequence number before gremlin function: " << p.getSequenceNum() << endl;
     int pc = probCorrupt; int pl = probLoss; int pd = probDelay;
 	bool* pckStatus = gremlin(&p, pc, pl, pd);
 
@@ -393,9 +390,6 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   bool* packStatus = new bool[2];
   int r = rand() % 100;
 
-  cout << "Corruption probability: " << corruptProb << endl;
-  cout << "Random number: " << r << endl;
-
   packStatus[0] = false;
   packStatus[1] = false;
 
@@ -409,12 +403,16 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   }
   else if(r <= (corruptProb)){
     cout << "Corrupted!" << endl;
-	cout << "Seq. num (pre-gremlin): " << pack->getSequenceNum() << endl;
     pack->loadDataBuffer((char*)"GREMLIN LOL");
   }
+
+  char substring[49];
+  memcpy(substring, &(pack->getDataBuffer()), 48);
+  substring[48] = '\0';
+
   cout << "Seq. num: " << pack->getSequenceNum() << endl;
   cout << "Checksum: " << pack->getCheckSum() << endl;
-  //cout << "Message: "  << pack->getDataBuffer() << endl;
+  cout << "Message: "  << substring << endl;
 
   return packStatus;
 }
