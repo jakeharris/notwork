@@ -270,13 +270,13 @@ bool sendFile() {
 	while(base * BUFSIZE < length) {
 		loadWindow();
 		
-		cout << endl << "beginning of loop " << x << endl;
 		if(p.str()[0] == '\0') finale = p.getSequenceNum();
 		for(int x = 0; x < WIN_SIZE; x++) {
 			p = window[x];
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
+			cout << endl << "beginning of loop " << x << endl;
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
