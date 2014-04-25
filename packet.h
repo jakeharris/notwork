@@ -9,10 +9,10 @@ class Packet{
     int sequenceNum;
     int checkSum;
     int ackNack;
-    char dataBuff[122];
+    char dataBuff[505];
     std::string tempStr;
     std::string packetString;
-    char packet[129];
+    char packet[512];
   //Public functions and variables
   public:
     void setSequenceNum(int sn);
