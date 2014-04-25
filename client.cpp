@@ -265,10 +265,7 @@ bool isvpack(unsigned char * p) {
   cout << "sn >= base: " << (sn >= base) << endl;
   cout << "sn < (base + WIN_SIZE): " << (sn < (base + WIN_SIZE)) << endl;
 
-  if((sn >= base) && (sn < (base + WIN_SIZE))) { cout << "how is this real life" << endl; return false; }
-
-  cout << "Checksum is failing." << endl;
-
+  if(!(sn >= base && sn < base + WIN_SIZE)) return false;
   if(cs != pk.generateCheckSum()) return false;
   return true;
 }
