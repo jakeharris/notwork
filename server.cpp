@@ -54,25 +54,18 @@ bool dropPck;
 bool delayPck;
 int toms;
 unsigned char b[BUFSIZE];
-int currentIndex;
+int base;
 
 int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
-
-  calen = sizeof(ca);
   
-  unsigned char packet[PAKSIZE + 1];
-  rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
-  
-  loadWindow();
   sendFile();
   
   return 0;
 }
 
 bool init(int argc, char** argv){
-  currentIndex = 0; //initialize value of currentIndex at start of program
 
   if(argc != 6) { 
     cout << USAGE << endl;
@@ -98,7 +91,7 @@ bool init(int argc, char** argv){
     return 0;
   }
 
-  setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+  //setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
 
   /* 
    * Bind our socket to an IP (whatever the computer decides) 
@@ -125,9 +118,18 @@ bool init(int argc, char** argv){
   cout << "File: " << endl << fstr << endl;
 
   seqNum = 0;
+  base = 0;
   dropPck = false;
+  calen = sizeof(ca);
+
+  getGet();
   
   return true;
+}
+
+bool getGet(){
+	unsigned char packet[PAKSIZE + 1];
+	rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
 }
 
 bool isvpack(unsigned char * p) {
@@ -238,8 +240,7 @@ bool loadFile() {
 }
 
 void loadWindow(){
-	for(int i = 0; i <= WIN_SIZE; i++) {
-		currentIndex = i; //update currentIndex for later use
+	for(int i = base; i <= WIN_SIZE; i++) {
 		window[i] = createPacket(i);
 	}
 }
@@ -247,33 +248,30 @@ void loadWindow(){
 bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
-  for(int x = 0; x <= WIN_SIZE; x++) {
-    p = window[x];
 
-    if(!sendPacket()) continue;
+	loadWindow();
 
-	struct timeval t1, t2;
-	gettimeofday(&t1, NULL);
+	for(int x = 0; x <= WIN_SIZE; x++) {
+		p = window[x];
 
-    if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
-		cout << "=== ACK TIMEOUT" << endl;
-		x--;
-		continue;
+		if(!sendPacket()) continue;
 	}
+	for(int x = 0; x <= WIN_SIZE; x++) {
+		if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
+			cout << "=== ACK TIMEOUT" << endl;
+			x--;
+			continue;
+		}
 
-	gettimeofday(&t2, NULL);
-	cout << "We took " << t2.tv_usec - t1.tv_usec << " us to receive that ack." << endl;
-	cout << "We had " << toms << " ms to take." << endl;
+		if(isAck()) { 
+			handleAck();
+		} else { 
+			handleNak(x);
+		}
 
-    if(isAck()) { 
-      handleAck();
-    } else { 
-      handleNak(x);
-    }
-
-    memset(b, 0, BUFSIZE);
-  }
-  return true;
+		memset(b, 0, BUFSIZE);
+	}
+	return true;
 }
 
 Packet createPacket(int index){
