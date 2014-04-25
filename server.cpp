@@ -302,7 +302,7 @@ bool sendFile() {
 			desc_ready = t;
 			for(int u = 0; u <= max_sd &&  desc_ready > 0; u++){
 				if(finale + desc_ready < WIN_SIZE){
-					if(finale == WIN_SIZE -2) break;
+					if(finale++ == WIN_SIZE -2) break;
 				}
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
