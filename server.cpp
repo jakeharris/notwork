@@ -276,7 +276,7 @@ Packet createPacket(int index){
 	if(mstr.length() < BUFSIZE) {
       mstr[length - (index * BUFSIZE)] = '\0';
     }
-    return Packet (base + index, mstr.c_str());
+    return Packet (index, mstr.c_str());
 }
 
 bool sendPacket(){
