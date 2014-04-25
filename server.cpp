@@ -257,7 +257,7 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
-			if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
+			if(recvfrom(s, b, BUFSIZE + 8, 0, (struct sockaddr *)&ca, &calen) < 0) {
 				cout << "=== ACK TIMEOUT" << endl;
 				x--;
 				continue;
