@@ -275,8 +275,6 @@ bool getFile(){
     unsigned char dataPull[BUFSIZE];
     rlen = recvfrom(s, packet, PAKSIZE + 1, 0, (struct sockaddr *)&sa, &salen);
 
-	cout << "packet[0] is null terminator: " << (packet[0] == '\0') << endl;
-
 	if(packet[0] == '\0') break;
 
 	for(int x = 0; x < BUFSIZE; x++) {

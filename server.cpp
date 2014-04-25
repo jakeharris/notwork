@@ -256,6 +256,7 @@ bool sendFile() {
 			p = window[x];
 			if(!sendPacket()) continue;
 		}
+		if(p.str()[0] == '\0') break;
 		for(int x = 0; x < WIN_SIZE; x++) {
 			if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 				cout << "=== ACK TIMEOUT" << endl;
