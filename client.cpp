@@ -294,10 +294,10 @@ bool getFile(){
 	
 	cout << "The Checksum pulled from client window: " << tempTest[0] << endl; 
 
-	for(int x = 0; x < PAKSIZE - 7; x++) {
-      dataPull[x] = packet[x + 7];
+	for(int x = 0; x < PAKSIZE - 8; x++) {
+      dataPull[x] = packet[x + 8];
     }
-    dataPull[PAKSIZE - 7] = '\0';
+    dataPull[PAKSIZE - 8] = '\0';
     packet[PAKSIZE] = '\0';
     if (rlen > 0) {
 	  char * sns = new char[3];
