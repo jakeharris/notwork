@@ -1,5 +1,5 @@
 # Compiler
-C = g++ -std=c++0x
+C = g++
 
 # Flags
 CFLAGS = -c
