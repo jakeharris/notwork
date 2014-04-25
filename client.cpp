@@ -16,6 +16,7 @@
 #define PAKSIZE 128
 #define ACK 0
 #define NAK 1
+#define WIN_SIZE 16
 
 using namespace std;
 
@@ -40,7 +41,7 @@ string hs;
 short int port;
 char * file;
 unsigned char* window[16]; //packet window
-int windowBase; //used to determine position in window of arriving packets
+int base; //used to determine position in window of arriving packets
 int length;
 struct sockaddr_in a;
 struct sockaddr_in sa;
@@ -66,7 +67,7 @@ int main(int argc, char** argv) {
 }
 
 bool init(int argc, char** argv) {
-  windowBase = 0; //initialize windowBase
+  base = 0; //initialize base
   s = 0;
 
   hs = string("131.204.14.") + argv[1]; /* Needs to be updated? Might be a string like "tux175.engr.auburn.edu." */
@@ -258,7 +259,7 @@ bool isvpack(unsigned char * p) {
 
   // change to validate based on checksum and sequence number
 
-  if(sn == seqNum) return false;
+  if(sn >= base && sn < base + WIN_SIZE) return false;
   if(cs != pk.generateCheckSum()) return false;
   return true;
 }
@@ -280,7 +281,7 @@ bool getFile(){
 
 	/* Begin Window Loading */
 	int tempSeqNum = boost::lexical_cast<int>(packet[0]);
-	int properIndex = tempSeqNum - windowBase;
+	int properIndex = tempSeqNum - base;
 
 	window[properIndex] = packet;
 	cout << "Packet loaded into window" << endl;
@@ -311,16 +312,16 @@ bool getFile(){
         int x = boost::lexical_cast<int>(sns);
 		cout << "sns: " << sns << endl;
 		cout << "x (sns as int): " << x << endl;
-		if(x == windowBase) windowBase++; //increment base of window //FIXME
+		if(x == base) base++; //increment base of window //FIXME
         file << dataPull;
 		file.flush();
       }
       cout << "Sent response: ";
-      cout << "ACK " << windowBase << endl;
+      cout << "ACK " << base << endl;
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 
-	  string wbs = to_string((long long)windowBase);
+	  string wbs = to_string((long long)base);
 	  const char * ackval = wbs.c_str();
 
       if(sendto(s, ackval, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
