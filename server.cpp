@@ -237,6 +237,8 @@ void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i-base] = createPacket(i);
 		if(strlen(window[i-base].getDataBuffer()) < BUFSIZE) { 
+			cout << "strlen: " << strlen(window[i-base].getDataBuffer()) << endl;
+			cout << "BUFSIZE: " << BUFSIZE << endl;
 			break;
 		}
 	}
