@@ -316,6 +316,9 @@ bool getFile(){
 
 	  if(packet[6] == '1') usleep(delayT*1000);
 
+	  string s = tostring(windowBase);
+	  const char * ackval = s.c_str();
+
       if(sendto(s, *windowBase, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
         return 0;
