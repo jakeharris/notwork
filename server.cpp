@@ -257,6 +257,7 @@ bool sendFile() {
 	struct timeval stTimeOut;
 
 	FD_ZERO(&stReadFDS);
+	stTimeOut.tv_sec = 0;
 	stTimeOut.tv_usec = 1000 * TIMEOUT;
 	FD_SET(s, &stReadFDS);
 
@@ -278,6 +279,10 @@ bool sendFile() {
 					x--;
 					continue;
 				}
+			} else {
+				cout << "=== ACK TIMEOUT" << endl;
+				x--;
+				continue;
 			}
 			if(isAck()) { 
 				handleAck();
