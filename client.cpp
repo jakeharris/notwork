@@ -274,9 +274,9 @@ bool getFile(){
   int ack;
   
   for (;;) {
-    unsigned char packet[PAKSIZE + 1];
+    unsigned char packet[PAKSIZE + 2];
     unsigned char dataPull[BUFSIZE + 2];
-    rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&sa, &salen);
+    rlen = recvfrom(s, packet, PAKSIZE + 1, 0, (struct sockaddr *)&sa, &salen);
 
 	cout << "packet: " << packet << endl;
 
@@ -284,7 +284,7 @@ bool getFile(){
       dataPull[x] = packet[x + 8];
     }
     dataPull[BUFSIZE + 2] = '\0';
-    packet[PAKSIZE] = '\0';
+    packet[PAKSIZE + 2] = '\0';
     if (rlen > 0) {
 	  char * sns = new char[3];
 	  memcpy(sns, &packet[0], 3);
