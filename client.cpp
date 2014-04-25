@@ -296,7 +296,7 @@ bool getFile(){
 	  int pid = boost::lexical_cast<int>(sns);
       if(isvpack(packet)) {
 		cout << "Is valid packet. (sq.nm. " << pid << ", base " << base << ")" << endl;
-		if(pid == base) { 
+		if(pid == base % 32) { 
 			cout << "Is required packet." << endl;
 			base++; //increment base of window
 			file << dataPull;
