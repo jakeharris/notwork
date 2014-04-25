@@ -70,19 +70,17 @@ int main(int argc, char** argv) {
 
 bool init(int argc, char** argv){
 
-  if(argc != 6) { 
+  if(argc != 4) { 
     cout << USAGE << endl;
     return false;
   }
 
-  char * probCorruptStr = argv[2];
+  char * probCorruptStr = argv[1];
   probCorrupt = boost::lexical_cast<int>(probCorruptStr);
-  char * probLossStr = argv[3];
+  char * probLossStr = argv[2];
   probLoss = boost::lexical_cast<int>(probLossStr);
-  char * probDelayStr = argv[4];
+  char * probDelayStr = argv[3];
   probDelay = boost::lexical_cast<int>(probDelayStr);
-  char* delayTStr = argv[5];
-  delayT = boost::lexical_cast<int>(delayTStr);
   
   struct timeval timeout;
   timeout.tv_usec = TIMEOUT * 1000;
@@ -260,6 +258,7 @@ bool sendFile() {
 
 	struct timeval stTimeOut;
 
+
 	FD_ZERO(&stReadFDS);
 	stTimeOut.tv_sec = 0;
 	stTimeOut.tv_usec = 1000 * TIMEOUT;
@@ -272,7 +271,6 @@ bool sendFile() {
 	bool hasRead = false;
 	while(base * BUFSIZE < length) {
 		int finale = 0;
-		cout << "Time to load window!" << endl;
 		loadWindow();
 		
 		if(p.str()[0] == '\0') finale = p.getSequenceNum();
