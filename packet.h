@@ -9,7 +9,7 @@ class Packet{
     int sequenceNum;
     int checkSum;
     int ackNack;
-    char dataBuff[122];
+    char dataBuff[121];
     std::string tempStr;
     std::string packetString;
     char packet[128];
