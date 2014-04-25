@@ -290,7 +290,7 @@ bool sendFile() {
 				handleAck();
 				//handleNak(x);
 			}
-			
+			cout << "loop no. " << x << endl;
 			if(finale > 0 && base == finale) break;
 			memset(b, 0, BUFSIZE);
 		}
