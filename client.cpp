@@ -292,6 +292,7 @@ bool getFile(){
       cout << endl << endl << "=== RECEIPT" << endl;
       cout << "Seq. num: " << sns << endl;
       cout << "Checksum: " << css << endl;
+	  cout << "Payload: " << dataPull[x] << endl;
 	  int pid = boost::lexical_cast<int>(sns);
       if(isvpack(packet)) {
 		if(pid == base % 32) { 
