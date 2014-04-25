@@ -267,10 +267,11 @@ bool sendFile() {
 
 	base = 0;
 	int desc_ready;
-	int finale = -1;
+	
 	int max_sd;
 	bool hasRead = false;
 	while(base * BUFSIZE < length) {
+		int finale = -1;
 		cout << "Time to load window!" << endl;
 		loadWindow();
 		
