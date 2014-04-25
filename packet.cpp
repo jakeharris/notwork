@@ -9,10 +9,11 @@
 	sequenceNum = 0;
 	checkSum = 0;
 	ackNack = 0;
-        dataBuff[122];
+        dataBuff[121];
   }
   Packet::Packet (int sn, const char db[122]){
     sequenceNum = sn % 32;
+	std::cout << "db: " << db << std::endl;
     strcpy(dataBuff, db);
     checkSum = generateCheckSum();
     ackNack =0;
