@@ -243,7 +243,7 @@ bool isvpack(unsigned char * p) {
   css[5] = '\0';
       
   char * db = new char[121 + 1];
-  memcpy(db, &p[8], 121);
+  memcpy(db, &p[8], 122);
   db[121] = '\0';
 
   cout << "Seq. num: " << sns << endl;
