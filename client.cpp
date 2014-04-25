@@ -326,6 +326,7 @@ bool getFile(){
 
 	  string wbs = to_string((long long)base);
 	  const char * ackval = wbs.c_str();
+	  cout << "wbs: " << wbs << endl;
 
       if(sendto(s, ackval, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
