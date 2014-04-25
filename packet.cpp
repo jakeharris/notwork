@@ -12,7 +12,7 @@
         dataBuff[121];
   }
   Packet::Packet (int sn, const char db[121]){
-    sequenceNum = (sn + 1) % 2;
+    sequenceNum = sn % 32;
     strcpy(dataBuff, db);
     checkSum = generateCheckSum();
     ackNack =0;

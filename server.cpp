@@ -35,7 +35,6 @@ void loadWindow();
 bool sendPacket();
 bool getGet();
 
-int seqNum = 0;
 struct sockaddr_in a;
 struct sockaddr_in ca;
 socklen_t calen;
@@ -161,7 +160,7 @@ bool isvpack(unsigned char * p) {
 
   // change to validate based on checksum and sequence number
 
-  if(sn == seqNum) return false;
+  if(sn == 0) return false; //doesn't matter, only for the old version (netwark)
   if(cs != pk.generateCheckSum()) return false;
   return true;
 }
@@ -173,17 +172,11 @@ bool getFile(){
 
   ofstream file("Dumpfile");
 
-  bool isSeqNumSet = false;
   for (;;) {
     unsigned char packet[PAKSIZE + 1];
     unsigned char dataPull[PAKSIZE - 7 + 1];
     rlen = recvfrom(s, packet, PAKSIZE, 0, (struct sockaddr *)&ca, &calen);
-    if(!isSeqNumSet) {
-      isSeqNumSet = true;
-      char * str = new char[1];
-      memcpy(str, &packet[0], 1);
-      seqNum = boost::lexical_cast<int>(str);
-    }
+
     for(int x = 0; x < PAKSIZE - 7; x++) {
       dataPull[x] = packet[x + 7];
     }
@@ -200,13 +193,13 @@ bool getFile(){
       cout << "Sent response: ";
       if(isvpack(packet)) {
         ack = ACK;
-        seqNum = (seqNum) ? false : true;
+        //seqNum = (seqNum) ? false : true;
         file << dataPull;
       } else { 
         ack = NAK;
       }
       cout << ((ack == ACK) ? "ACK" : "NAK") << endl;
-      Packet p ((seqNum) ? false : true, reinterpret_cast<const char *>(dataPull));
+      Packet p (false, reinterpret_cast<const char *>(dataPull));
       p.setCheckSum(boost::lexical_cast<int>(css));
       p.setAckNack(ack);
 
