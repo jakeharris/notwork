@@ -266,6 +266,7 @@ bool sendFile() {
 
 	base = 0;
 	int finale = -1;
+	bool hasRead = false;
 	while(base * BUFSIZE < length) {
 		loadWindow();
 		
@@ -279,17 +280,18 @@ bool sendFile() {
 			stTimeOut.tv_sec = 1;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
 			FD_SET(0, &stReadFDS);
+
+
 			cout << "begin loop no. " << x << endl;
 			int t = select(1, &stReadFDS, NULL, NULL, &stTimeOut);
 			if (t != 0) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT" << endl;
-				}
+				} else hasRead = true;
 			} else {
 				cout << "=== ACK TIMEOUT" << endl;
 			}
-			cout << "b: " << b << endl;
-			if(b[0] == '\0') continue;
+			if(!hasRead) continue;
 			if(isAck()) { 
 				handleAck();
 			} else { 
