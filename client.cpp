@@ -281,7 +281,7 @@ bool getFile(){
 	for(int x = 0; x < BUFSIZE; x++) {
       dataPull[x] = packet[x + 8];
     }
-	dataPull[BUFSIZE] = '/0';
+	dataPull[BUFSIZE] = '\0';
     if (rlen > 0) {
 	  char * sns = new char[3];
 	  memcpy(sns, &packet[0], 3);
