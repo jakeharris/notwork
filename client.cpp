@@ -38,7 +38,7 @@ int probLoss;
 string hs;
 short int port;
 char * file;
-char* window[16]; //packet window
+unsigned char* window[16]; //packet window
 int windowBase; //used to determine position in window of arriving packets
 int length;
 struct sockaddr_in a;
@@ -284,8 +284,8 @@ bool getFile(){
 	window[properIndex] = packet;
 	cout << "Packet loaded into window" << endl;
 	char* tempTest = new char[6];
-		memcpty(tempTest, &window[1], 0);
-		css[5] = '\0';
+		memcpy(tempTest, &window[1], 0);
+		tempTest[5] = '\0';
 	
 	cout << "The Checksum pulled from client window: " << tempTest[0] << endl; 
 
