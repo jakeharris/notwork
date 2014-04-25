@@ -277,7 +277,7 @@ bool getFile(){
 
 	cout << "packet[0] is null terminator: " << (packet[0] == '\0') << endl;
 
-	if(packet == '\0') break;
+	if(packet[0] == '\0') break;
 
 	for(int x = 0; x < BUFSIZE; x++) {
       dataPull[x] = packet[x + 8];
