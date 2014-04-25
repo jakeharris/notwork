@@ -2,7 +2,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <string>
+#include <string.h>
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
