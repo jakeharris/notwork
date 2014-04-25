@@ -275,6 +275,8 @@ bool getFile(){
     unsigned char dataPull[BUFSIZE];
     rlen = recvfrom(s, packet, PAKSIZE + 1, 0, (struct sockaddr *)&sa, &salen);
 
+	if(packet[0] == '\0') break;
+
 	for(int x = 0; x < BUFSIZE; x++) {
       dataPull[x] = packet[x + 8];
     }
@@ -317,6 +319,7 @@ bool getFile(){
       delete css;
     }
   }
+  cout << "GET Testfile into Dumpfile complete." << endl;
   file.close();
   return true;
 }

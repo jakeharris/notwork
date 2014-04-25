@@ -238,7 +238,7 @@ void loadWindow(){
 		window[i-base] = createPacket(i);
 		if(strlen(window[i-base].getDataBuffer()) < BUFSIZE - 1) { 
 			for(++i; i < base + WIN_SIZE; i++){
-				window[i-base].loadDataBuffer("");
+				window[i-base].loadDataBuffer('\0');
 			}
 			break;
 		}
