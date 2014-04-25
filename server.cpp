@@ -316,7 +316,7 @@ bool sendFile() {
 			}*/
 		
 		}
-
+	}
 	if(sendto(s, "\0", BUFSIZE, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Final package sending failed. (socket s, server address sa, message m)" << endl;
 		return false;
