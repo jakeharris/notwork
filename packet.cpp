@@ -1,5 +1,6 @@
 #include "packet.h"
 
+#include <string>
 #include <iostream>
 #include <cstdlib>
 
