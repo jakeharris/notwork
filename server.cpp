@@ -19,7 +19,7 @@
 #define NAK 1
 #define BUFSIZE 505
 #define FILENAME "Testfile"
-#define TIMEOUT 1000 //in ms
+#define TIMEOUT 15 //in ms
 #define WIN_SIZE 16
 
 using namespace std;
@@ -260,13 +260,15 @@ bool sendFile() {
 	struct timeval stTimeOut;
 
 	FD_ZERO(&stReadFDS);
-	stTimeOut.tv_sec = 1;
+	stTimeOut.tv_sec = 0;
 	stTimeOut.tv_usec = 1000 * TIMEOUT;
 	FD_SET(0, &stReadFDS);
 
 	base = 0;
 	int finale = -1;
 	while(base * BUFSIZE < length) {
+		FD_ZERO(&stReadFDS);
+		FD_SET(0, &stReadFDS);
 		loadWindow();
 		
 		if(p.str()[0] == '\0') finale = p.getSequenceNum();
