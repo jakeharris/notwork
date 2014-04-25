@@ -48,7 +48,7 @@
     while(csStr.length() < 5) csStr += '0';
 
 	sns = std::to_string((long long int)sequenceNum);
-	cout << "changed" << endl;
+	std::cout << "changed" << std::endl;
 	if(sns.length() < 2) sns.insert(0, 1, '0');
 
     packetString = std::to_string((long long int)sequenceNum) + csStr + std::to_string((long long int)ackNack) + tempStr;
