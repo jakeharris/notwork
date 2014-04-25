@@ -263,7 +263,7 @@ bool isvpack(unsigned char * p) {
   cout << "base: " << base << endl;
   cout << "base + WIN_SIZE: " << base + WIN_SIZE << endl;
   cout << "sn >= base: " << (sn >= base) << endl;
-  cout << "sn < (base + WIN_SIZE): " << (sn < (base + WIN_SIZE) << endl;
+  cout << "sn < (base + WIN_SIZE): " << (sn < (base + WIN_SIZE)) << endl;
 
   if((sn >= base) && (sn < (base + WIN_SIZE))) { cout << "how is this real life" << endl; return false; }
 
