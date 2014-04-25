@@ -331,7 +331,7 @@ bool getFile(){
 
       if(sendto(s, ackval, PAKSIZE, 0, (struct sockaddr *)&sa, salen) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
-		cout << strerr(errno) << endl;
+		cout << perror("sendto()") << endl;
         return 0;
       }
 	  delete sns;
