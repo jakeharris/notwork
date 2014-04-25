@@ -236,6 +236,9 @@ bool loadFile() {
 void loadWindow(){
 	for(int i = base; i < base + WIN_SIZE; i++) {
 		window[i-base] = createPacket(i);
+		if(window[i-base].getDataBuffer().length() < BUFSIZE) { 
+			break;
+		}
 	}
 }
 
