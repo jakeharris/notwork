@@ -256,13 +256,13 @@ void loadWindow(){
 bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
-	struct fd_set stReadFDS, workingReadFDS;
+	fd_set stReadFDS, workingReadFDS;
 	struct timeval stTimeOut;
 
 	FD_ZERO(&stReadFDS);
 	stTimeOut.tv_sec = 0;
 	stTimeOut.tv_usec = 1000 * TIMEOUT;
-	FD_SET(0, &stReadFDS);
+	FD_SET(s, &stReadFDS);
 
 	base = 0;
 	int desc_ready;
