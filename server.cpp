@@ -300,6 +300,7 @@ bool sendPacket(){
 bool isAck() {
     cout << endl << "=== SERVER RESPONSE TEST" << endl;
     cout << "Data: " << b << endl;
+	cout << "Window base: " << base << endl;
     if(b[6] == '0') return true;
     else return false;
 }
