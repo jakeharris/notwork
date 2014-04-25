@@ -257,7 +257,7 @@ bool sendFile() {
 			if(!sendPacket()) continue;
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
-			if(recvfrom(s, b, BUFSIZE + 8, 0, (struct sockaddr *)&ca, &calen) < 0) {
+			if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 				cout << "=== ACK TIMEOUT" << endl;
 				x--;
 				continue;
@@ -303,7 +303,7 @@ bool sendPacket(){
 	if (dropPck == true) return false;
 	if (delayPck == true) p.setAckNack(1);
 
-    if(sendto(s, p.str(), BUFSIZE + 7, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
+    if(sendto(s, p.str(), BUFSIZE + 8, 0, (struct sockaddr *)&ca, sizeof(ca)) < 0) {
 		cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
 		return false;
     }
