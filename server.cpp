@@ -288,6 +288,7 @@ bool sendFile() {
 			max_sd = s;
 			cout << endl << "before select" << endl;
 			int t = select(max_sd + 1, &stReadFDS, NULL, NULL, &stTimeOut);
+			cout << "after select" << endl;
 			if (t == -1){
 				perror("select()");
 			}
