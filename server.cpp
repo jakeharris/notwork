@@ -283,7 +283,10 @@ bool sendFile() {
 			FD_SET(s, &stReadFDS);
 			cout << endl << "before select" << endl;
 			int t = select(-1, &stReadFDS, NULL, NULL, &stTimeOut);
-			if (t != 0) {
+			if (t == -1){
+				perror("select()");
+			}
+			else if (t) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
 				} else hasRead = true;
