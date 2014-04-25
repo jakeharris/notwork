@@ -280,12 +280,10 @@ bool sendFile() {
 			if (t != 0) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT" << endl;
-					x--;
 					continue;
 				}
 			} else {
 				cout << "=== ACK TIMEOUT" << endl;
-				x--;
 				continue;
 			}
 			if(isAck()) { 
