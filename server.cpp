@@ -277,13 +277,13 @@ bool sendFile() {
 		}
 		for(int x = 0; x < WIN_SIZE; x++) {
 			FD_ZERO(&stReadFDS);
-			stTimeOut.tv_sec = 1;
+			stTimeOut.tv_sec = 0;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
 			FD_SET(s, &stReadFDS);
 
 
 			cout << "begin loop no. " << x << endl;
-			int t = select(1, &stReadFDS, NULL, NULL, &stTimeOut);
+			int t = select(-1, &stReadFDS, NULL, NULL, &stTimeOut);
 			if (t != 0) {
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
