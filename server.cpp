@@ -91,7 +91,7 @@ bool init(int argc, char** argv){
     return 0;
   }
 
-  //setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+  setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
 
   /* 
    * Bind our socket to an IP (whatever the computer decides) 
@@ -242,28 +242,30 @@ void loadWindow(){
 bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
-	base = 0;
-	loadWindow();
+	while(base * BUFSIZE < length) {
+		base = 0;
+		loadWindow();
 
-	for(int x = 0; x < WIN_SIZE; x++) {
-		p = window[x];
-		if(!sendPacket()) continue;
-	}
-	for(int x = 0; x < WIN_SIZE; x++) {
-		if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
-			cout << "=== ACK TIMEOUT" << endl;
-			x--;
-			continue;
+		for(int x = 0; x < WIN_SIZE; x++) {
+			p = window[x];
+			if(!sendPacket()) continue;
 		}
+		for(int x = 0; x < WIN_SIZE; x++) {
+			if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
+				cout << "=== ACK TIMEOUT" << endl;
+				x--;
+				continue;
+			}
 
-		if(isAck()) { 
-			handleAck();
-		} else { 
-			handleAck();
-			//handleNak(x);
+			if(isAck()) { 
+				handleAck();
+			} else { 
+				handleAck();
+				//handleNak(x);
+			}
+
+			memset(b, 0, BUFSIZE);
 		}
-
-		memset(b, 0, BUFSIZE);
 	}
 	return true;
 }
