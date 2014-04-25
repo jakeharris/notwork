@@ -256,7 +256,7 @@ void loadWindow(){
 bool sendFile() {
 	/*Currently causes the program to only send the first 16 packets of file out
 		requires additional code later to sendFile again with updated window*/
-	fd_set stReadFDS;
+	struct fd_set stReadFDS, workingReadFDS;
 	struct timeval stTimeOut;
 
 	FD_ZERO(&stReadFDS);
@@ -265,7 +265,9 @@ bool sendFile() {
 	FD_SET(0, &stReadFDS);
 
 	base = 0;
+	int desc_ready;
 	int finale = -1;
+	int max_sd;
 	bool hasRead = false;
 	while(base * BUFSIZE < length) {
 		loadWindow();
@@ -280,19 +282,23 @@ bool sendFile() {
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
-			FD_SET(0, &stReadFDS);
+			FD_SET(s, &stReadFDS);
+			memcpy(&working_set, &stReadFDS, sizeof(stReadFDS));
+			max_sd = s;
 			cout << endl << "before select" << endl;
-			int t = select(1, &stReadFDS, NULL, NULL, &stTimeOut);
+			int t = select(max_sd + 1, &working_set, NULL, NULL, &stTimeOut);
 			if (t == -1){
 				perror("select()");
 			}
-			else if (t) {
+			if (t == 0) {
+				cout << "=== ACK TIMEOUT (select)" << endl;
+
+			} 
+			desc_ready = t;
+			for(int u = 0; u <= max_sd  &&  desc_ready > u++){
 				if(recvfrom(s, b, BUFSIZE + 7, 0, (struct sockaddr *)&ca, &calen) < 0) {
 					cout << "=== ACK TIMEOUT (recvfrom)" << endl;
 				} else hasRead = true;
-			} else {
-				cout << "=== ACK TIMEOUT (select)" << endl;
-			}
 			if(!hasRead) continue;
 			if(isAck()) { 
 				handleAck();
