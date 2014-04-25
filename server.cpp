@@ -240,7 +240,7 @@ void loadWindow(){
 			for(++i; i < base + WIN_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}
-			break;
+			return;
 		}
 	}
 }
@@ -252,7 +252,7 @@ bool sendFile() {
 	while(base * BUFSIZE < length) {
 		loadWindow();
 
-		cout << "packet " << base << ": " << window[0] << endl;
+		cout << "packet " << base << ": " << window[0].str() << endl;
 
 		for(int x = 0; x < WIN_SIZE; x++) {
 			p = window[x];
