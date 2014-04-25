@@ -367,6 +367,7 @@ bool* gremlin(Packet * pack, int corruptProb, int lossProb, int delayProb){
   }
   else if(r <= (corruptProb)){
     cout << "Corrupted!" << endl;
+	cout << "Seq. num (pre-gremlin): " << pack->getSequenceNum() << endl;
     pack->loadDataBuffer((char*)"GREMLIN LOL");
   }
   cout << "Seq. num: " << pack->getSequenceNum() << endl;
