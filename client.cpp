@@ -243,9 +243,9 @@ bool isvpack(unsigned char * p) {
   memcpy(css, &p[2], 5);
   css[5] = '\0';
       
-  char * db = new char[121 + 1];
+  char * db = new char[122 + 1];
   memcpy(db, &p[8], 122);
-  db[121] = '\0';
+  db[122] = '\0';
 
   cout << "Seq. num: " << sns << endl;
   cout << "Checksum: " << css << endl;
