@@ -10,11 +10,11 @@
 #include <boost/lexical_cast.hpp>
 #include "packet.h"
 
-#define BUFSIZE 122
+#define BUFSIZE 505
 #define FILENAME "Testfile"
 #define TEST_FILENAME "Testfile2"
 #define PORT 10038
-#define PAKSIZE 129
+#define PAKSIZE 512
 #define ACK 0
 #define NAK 1
 #define WIN_SIZE 16
