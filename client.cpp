@@ -308,8 +308,10 @@ bool getFile(){
       cout << "Checksum: " << css << endl;
       cout << "Received message: " << dataPull << endl;
       if(isvpack(packet)) {
-        
-		if(boost::lexical_cast<int>(sns) == windowBase) windowBase++; //increment base of window //FIXME
+        int x = boost::lexical_cast<int>(sns);
+		cout << "sns: " << sns << endl;
+		cout << "x (sns as int): " << x << endl;
+		if(x == windowBase) windowBase++; //increment base of window //FIXME
         file << dataPull;
 		file.flush();
       }
